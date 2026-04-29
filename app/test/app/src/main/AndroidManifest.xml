@@ -14,9 +14,6 @@
         android:theme="@style/Theme.RoadOfDojo">
 
         <activity
-            android:name=".BoxingActivity"
-            android:exported="false" />
-        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
@@ -31,21 +28,12 @@
             </intent-filter>
         </activity>
 
-            android:name=".TaekwondoActivity"
-            android:exported="false" />
         <activity
             android:name=".OnboardingActivity"
-            android:name=".QuickTipsActivity"
             android:exported="false" />
+
         <activity
             android:name=".MainActivity"
-            android:name=".FavoritActivity"
-            android:exported="false" />
-        <activity
-            android:name=".BelaDiriActivity"
-            android:exported="false" />
-        <activity
-            android:name=".BerandaActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
