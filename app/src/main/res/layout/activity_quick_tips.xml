@@ -1,62 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#F0F0F0">
 
-    <!-- Toolbar / AppBar -->
+    <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#2D2D3A"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        app:titleTextColor="#FFFFFF"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Quick Tips"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:fontFamily="serif"
-            android:textColor="#FFFFFF"/>
+    <!-- Fragment Container — semua fragment tampil di sini -->
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
-    </androidx.appcompat.widget.Toolbar>
-
-    <!-- Placeholder Content -->
+    <!-- Bottom Navbar -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp">
-
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@android:drawable/ic_menu_info_details"
-            android:alpha="0.4"/>
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="#D0D0D0"
+        android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Quick Tips"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:fontFamily="serif"
-            android:textColor="#1A1A1A"
-            android:layout_marginTop="16dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tips dan trik akan tampil di sini"
+            android:text="Navbar"
             android:textSize="14sp"
-            android:textColor="#888888"
-            android:layout_marginTop="8dp"
-            android:gravity="center"/>
+            android:textColor="#666666"/>
 
     </LinearLayout>
 
