@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Road Of Dojo</string>
+
+    <string name="onboarding_title_1">Selamat datang di Road Of Dojo</string>
+    <string name="onboarding_description_1">Bangun habit latihan harian langkah demi langkah.</string>
+
+    <string name="onboarding_title_2">Track progres kamu</string>
+    <string name="onboarding_description_2">Lihat perjalananmu agar tetap konsisten dan termotivasi.</string>
+
+    <string name="onboarding_title_3">Siap mulai perjalanan?</string>
+    <string name="onboarding_description_3">Lanjut ke login untuk masuk dan mulai berlatih.</string>
+
+    <string name="onboarding_cta_skip">Lewati</string>
+    <string name="onboarding_cta_next">Lanjut</string>
+    <string name="onboarding_cta_start">Mulai</string>
+
+    <string name="login_title">Masuk ke Road Of Dojo</string>
+    <string name="login_google_button">Lanjut dengan Google</string>
+    <string name="login_status_idle">Pilih akun Google buat lanjut.</string>
+    <string name="login_status_loading">Memproses login...</string>
+    <string name="login_status_success">Login berhasil. Mantap!</string>
+    <string name="login_status_cancelled">Login dibatalkan.</string>
+    <string name="login_status_failed">Login gagal: %1$s</string>
+</resources>

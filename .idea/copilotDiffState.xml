@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/local.properties">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/local.properties" />
+              <option name="originalContent" value="## This file must *NOT* be checked into Version Control Systems,&#10;# as it contains information specific to your local configuration.&#10;#&#10;# Location of the SDK. This is only used by Gradle.&#10;# For customization when using a Version Control System, please read the&#10;# header note.&#10;#Wed Apr 29 21:49:20 WIB 2026&#10;sdk.dir=C\:\\Users\\frahm\\AppData\\Local\\Android\\Sdk&#10;&#10;" />
+              <option name="updatedContent" value="## This file must *NOT* be checked into Version Control Systems,&#10;# as it contains information specific to your local configuration.&#10;#&#10;# Location of the SDK. This is only used by Gradle.&#10;# For customization when using a Version Control System, please read the&#10;# header note.&#10;#Wed Apr 29 21:49:20 WIB 2026&#10;sdk.dir=C\:\\Users\\frahm\\AppData\\Local\\Android\\Sdk&#10;SUPABASE_URL=https://farpoovjetesiwiuxnfq.supabase.co&#10;SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhcnBvb3ZqZXRlc2l3aXV4bmZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNzM2MDEsImV4cCI6MjA5MTg0OTYwMX0.IAJNdzazgMANzfC_55jqkwi6obvlKnUz9MGTcaYJGGs&#10;GOOGLE_WEB_CLIENT_ID=974671510140-7nkj5o0sv79v76miso6dv37s2usgipj4.apps.googleusercontent.com&#10;APP_REDIRECT_URL=roadofdojo://login-callback" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
