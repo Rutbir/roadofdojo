@@ -22,5 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "roadofdojo"
+rootProject.name = "Road Of Dojo"
 include(":app")
+ 
