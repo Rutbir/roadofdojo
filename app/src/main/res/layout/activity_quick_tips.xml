@@ -25,39 +25,10 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- Placeholder Content -->
-    <LinearLayout
+    <!-- Fragment Container -->
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp">
-
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@android:drawable/ic_menu_info_details"
-            android:alpha="0.4"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Quick Tips"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:fontFamily="serif"
-            android:textColor="#1A1A1A"
-            android:layout_marginTop="16dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tips dan trik akan tampil di sini"
-            android:textSize="14sp"
-            android:textColor="#888888"
-            android:layout_marginTop="8dp"
-            android:gravity="center"/>
-
-    </LinearLayout>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 
 class QuickTipsActivity : AppCompatActivity() {
 
@@ -21,5 +22,18 @@ class QuickTipsActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+
+        if (savedInstanceState == null) {
+            loadFragment(QuickTipsListFragment(), addToBackStack = false)
+        }
+    }
+
+    fun loadFragment(fragment: Fragment, addToBackStack: Boolean = true) {
+        val transaction = supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+
+        if (addToBackStack) transaction.addToBackStack(null)
+
+        transaction.commit()
     }
 }
