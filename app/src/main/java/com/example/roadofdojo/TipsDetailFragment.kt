@@ -13,6 +13,7 @@ class TipsDetailFragment : Fragment() {
     companion object {
         // Key untuk Bundle argument
         const val ARG_TITLE = "tips_title"
+        const val ARG_BODY = "tips_body"
     }
 
     override fun onCreateView(
@@ -28,9 +29,11 @@ class TipsDetailFragment : Fragment() {
 
         // Ambil judul dari Bundle
         val tipsTitle = arguments?.getString(ARG_TITLE) ?: "Quick Tips"
+        val tipsBody = arguments?.getString(ARG_BODY) ?: "Konten tips akan tampil di sini"
 
         // Tampilkan judul di layout
         view.findViewById<TextView>(R.id.tvTipsTitle).text = tipsTitle
+        view.findViewById<TextView>(R.id.tvTipsBody).text = tipsBody
 
         // Update judul toolbar sesuai tips yang dipilih
         (activity as? QuickTipsActivity)?.supportActionBar?.title = tipsTitle

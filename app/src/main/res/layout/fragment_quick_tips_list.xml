@@ -2,8 +2,11 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F0F0F0"
+    android:orientation="vertical">
     android:background="@drawable/bg_wood_overlay"
     android:fillViewport="true">
 
@@ -34,6 +37,14 @@
                 android:background="#80471C"
                 android:paddingBottom="12dp">
 
+    <ProgressBar
+        android:id="@+id/progressTips"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:visibility="gone" />
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="130dp"
@@ -84,6 +95,15 @@
                     android:background="#EBEBEB"
                     android:contentDescription="Quick Tips 2"/>
 
+    <TextView
+        android:id="@+id/tvTipsEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="Belum ada tips."
+        android:textColor="#666666"
+        android:visibility="gone" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -118,6 +138,12 @@
                 android:background="#80471C"
                 android:paddingBottom="12dp">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvQuickTips"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="12dp" />
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="130dp"
@@ -136,7 +162,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="8dp"/>
 
-            </LinearLayout>
+</LinearLayout>
 
         </androidx.cardview.widget.CardView>
 

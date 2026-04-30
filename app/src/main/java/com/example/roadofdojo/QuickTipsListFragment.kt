@@ -5,10 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 
 
 class QuickTipsListFragment : Fragment() {
+
+    private val repository = QuickTipsRepository()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,32 +31,39 @@ class QuickTipsListFragment : Fragment() {
         // Update judul toolbar saat fragment ini aktif
         (activity as? QuickTipsActivity)?.supportActionBar?.title = "Quick Tips"
 
-        // Card Tips 1 → TipsDetailFragment dengan judul "Quick Tips 1"
-        view.findViewById<CardView>(R.id.cardTips1).setOnClickListener {
-            navigateToDetail("Quick Tips 1")
-        }
+        val progress = view.findViewById<ProgressBar>(R.id.progressTips)
+        val emptyText = view.findViewById<TextView>(R.id.tvTipsEmpty)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.rvQuickTips)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
-        // Card Tips 2
-        view.findViewById<CardView>(R.id.cardTips2).setOnClickListener {
-            navigateToDetail("Quick Tips 2")
+        val adapter = QuickTipsAdapter { tip ->
+            navigateToDetail(tip.title, tip.content)
         }
+        recyclerView.adapter = adapter
 
-        // Card Tips 3
-        view.findViewById<CardView>(R.id.cardTips3).setOnClickListener {
-            navigateToDetail("Quick Tips 3")
-        }
+        progress.visibility = View.VISIBLE
+        emptyText.visibility = View.GONE
 
-        // Card Tips 4
-        view.findViewById<CardView>(R.id.cardTips4).setOnClickListener {
-            navigateToDetail("Quick Tips 4")
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val tips = repository.fetchTips()
+                adapter.setItems(tips)
+                emptyText.visibility = if (tips.isEmpty()) View.VISIBLE else View.GONE
+            } catch (error: Exception) {
+                emptyText.text = "Gagal memuat tips."
+                emptyText.visibility = View.VISIBLE
+            } finally {
+                progress.visibility = View.GONE
+            }
         }
     }
 
-    private fun navigateToDetail(tipsTitle: String) {
+    private fun navigateToDetail(tipsTitle: String, tipsBody: String) {
         // Kirim judul ke fragment detail via Bundle
         val detailFragment = TipsDetailFragment().apply {
             arguments = Bundle().apply {
                 putString(TipsDetailFragment.ARG_TITLE, tipsTitle)
+                putString(TipsDetailFragment.ARG_BODY, tipsBody)
             }
         }
         (activity as? QuickTipsActivity)?.loadFragment(detailFragment)

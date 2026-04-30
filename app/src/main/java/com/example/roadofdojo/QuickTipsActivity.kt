@@ -34,6 +34,19 @@ class QuickTipsActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             loadFragment(QuickTipsListFragment(), addToBackStack = false)
         }
+
+        if (savedInstanceState == null) {
+            loadFragment(QuickTipsListFragment(), addToBackStack = false)
+        }
+    }
+
+    fun loadFragment(fragment: Fragment, addToBackStack: Boolean = true) {
+        val transaction = supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+
+        if (addToBackStack) transaction.addToBackStack(null)
+
+        transaction.commit()
     }
 
     // Fungsi helper untuk load fragment

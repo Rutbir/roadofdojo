@@ -16,7 +16,7 @@ fun localProperty(key: String): String = localProperties.getProperty(key, "")
 val appRedirectUrl = localProperty("APP_REDIRECT_URL").ifBlank { "roadofdojo://login-callback" }
 
 android {
-    namespace = "com.frahm.roadofdojo"
+    namespace = "com.example.roadofdojo"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -24,7 +24,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.frahm.roadofdojo"
+        applicationId = "com.example.roadofdojo"
         minSdk = 29
         targetSdk = 36
         versionCode = 1
@@ -54,6 +54,11 @@ android {
     buildFeatures {
         buildConfig = true
     }
+    sourceSets {
+        getByName("main") {
+            java.setSrcDirs(listOf("src/main/java"))
+        }
+    }
 }
 
 dependencies {
@@ -62,6 +67,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.4")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
