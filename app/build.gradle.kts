@@ -56,7 +56,7 @@ android {
     }
     sourceSets {
         getByName("main") {
-            java.setSrcDirs(listOf("src/main/java"))
+            java.setSrcDirs(listOf("src/main/java/com/example"))
         }
     }
 }
