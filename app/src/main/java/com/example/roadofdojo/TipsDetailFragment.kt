@@ -27,11 +27,11 @@ class TipsDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Ambil judul dari Bundle
+        // Ambil judul dan konten dari Bundle
         val tipsTitle = arguments?.getString(ARG_TITLE) ?: "Quick Tips"
-        val tipsBody = arguments?.getString(ARG_BODY) ?: "Konten tips akan tampil di sini"
+        val tipsBody = arguments?.getString(ARG_BODY) ?: ""
 
-        // Tampilkan judul di layout
+        // Tampilkan judul dan konten di layout
         view.findViewById<TextView>(R.id.tvTipsTitle).text = tipsTitle
         view.findViewById<TextView>(R.id.tvTipsBody).text = tipsBody
 
