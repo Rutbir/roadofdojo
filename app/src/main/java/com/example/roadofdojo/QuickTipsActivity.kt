@@ -14,35 +14,13 @@ class QuickTipsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quick_tips)
 
-        // Setup Toolbar
+        // Setup toolbar dengan tombol back
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Quick Tips"
-
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.setNavigationOnClickListener {
-            // Jika ada fragment di back stack → kembali ke list
-            // Jika tidak → keluar dari activity
-            if (supportFragmentManager.backStackEntryCount > 0) {
-                supportFragmentManager.popBackStack()
-            } else {
-                onBackPressedDispatcher.onBackPressed()
-            }
+            onBackPressedDispatcher.onBackPressed()
         }
-
-        // Tampilkan fragment list saat pertama kali
-        if (savedInstanceState == null) {
-            loadFragment(QuickTipsListFragment(), addToBackStack = false)
-        }
-    }
-
-    // Fungsi helper untuk load fragment
-    fun loadFragment(fragment: Fragment, addToBackStack: Boolean = true) {
-        val transaction = supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
-
-        if (addToBackStack) transaction.addToBackStack(null)
-
-        transaction.commit()
     }
 }

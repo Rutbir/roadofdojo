@@ -32,8 +32,11 @@ class QuickTipsListFragment : Fragment() {
         (activity as? QuickTipsActivity)?.supportActionBar?.title = "Quick Tips"
 
         val progress = view.findViewById<ProgressBar>(R.id.progressTips)
+        val emptyState = view.findViewById<View>(R.id.llEmptyState)
         val emptyText = view.findViewById<TextView>(R.id.tvTipsEmpty)
         val recyclerView = view.findViewById<RecyclerView>(R.id.rvQuickTips)
+        
+        // Menggunakan 2 kolom agar terlihat seperti grid kartu yang rapi
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
         val adapter = QuickTipsAdapter { tip ->
@@ -42,16 +45,16 @@ class QuickTipsListFragment : Fragment() {
         recyclerView.adapter = adapter
 
         progress.visibility = View.VISIBLE
-        emptyText.visibility = View.GONE
+        emptyState.visibility = View.GONE
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val tips = repository.fetchTips()
                 adapter.setItems(tips)
-                emptyText.visibility = if (tips.isEmpty()) View.VISIBLE else View.GONE
+                emptyState.visibility = if (tips.isEmpty()) View.VISIBLE else View.GONE
             } catch (error: Exception) {
                 emptyText.text = "Gagal memuat tips."
-                emptyText.visibility = View.VISIBLE
+                emptyState.visibility = View.VISIBLE
             } finally {
                 progress.visibility = View.GONE
             }
