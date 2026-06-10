@@ -1,79 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_wood_overlay"
-    android:orientation="vertical">
-
-    <ProgressBar
-        android:id="@+id/progressTips"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/tvTipsEmpty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="Belum ada tips."
-        android:textColor="#666666"
-        android:visibility="gone" />
+    android:background="@drawable/bg_wood_overlay">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvQuickTips"
         android:layout_width="match_parent"
-<<<<<<< Updated upstream
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="12dp" />
-</LinearLayout>
-=======
         android:layout_height="match_parent"
-        android:paddingHorizontal="8dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="80dp"
+        android:padding="12dp"
         android:clipToPadding="false" />
 
-    <!-- State Kosong yang lebih menarik -->
     <LinearLayout
         android:id="@+id/llEmptyState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:gravity="center"
         android:visibility="gone">
-
-        <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:src="@android:drawable/ic_menu_search"
-            android:alpha="0.5"
-            app:tint="#000000"/>
 
         <TextView
             android:id="@+id/tvTipsEmpty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Belum ada tips saat ini"
-            android:textSize="16sp"
-            android:textColor="#66000000" />
+            android:text="Tidak ada tips."
+            android:textSize="14sp"
+            android:textColor="#1A1A1A" />
+
     </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressTips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminateTint="#FFFFFF" />
+        android:layout_gravity="center" />
 
 </FrameLayout>
->>>>>>> Stashed changes
