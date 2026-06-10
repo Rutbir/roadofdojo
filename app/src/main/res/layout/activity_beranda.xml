@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F0F0"
+    android:background="@drawable/bg_wood_overlay"
     tools:context=".BerandaActivity">
 
     <!-- Main ScrollView Content -->
@@ -24,17 +24,18 @@
             <!-- Welcome Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
+                android:layout_height="126dp"
                 android:layout_marginBottom="24dp"
-
                 app:cardElevation="4dp">
 
+
                 <LinearLayout
-                    android:layout_width="500dp"
-                    android:layout_height="187dp"
-                    android:background="#2D2D3A"
+                    android:layout_width="match_parent"
+                    android:layout_height="125dp"
+                    android:background="#352315"
                     android:orientation="vertical"
                     android:padding="20dp">
+
 
                     <TextView
                         android:id="@+id/tvWelcome"
@@ -99,7 +100,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:background="#FFFFFF"
+                        android:background="#80471C"
                         android:paddingBottom="12dp">
 
                         <ImageView
@@ -108,7 +109,7 @@
                             android:layout_height="120dp"
                             android:scaleType="centerCrop"
                             android:background="#CCCCCC"
-                            tools:src="@tools:sample/avatars"/>
+                            android:src="@drawable/beladiri"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -116,7 +117,7 @@
                             android:text="Bela Diri"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:textColor="#1A1A1A"
+                            android:textColor="#FFFFFF"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="8dp"/>
 
@@ -141,7 +142,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:background="#FFFFFF"
+                        android:background="#80471C"
                         android:paddingBottom="12dp">
 
                         <ImageView
@@ -151,15 +152,15 @@
                             android:scaleType="centerInside"
                             android:padding="16dp"
                             android:background="#F5F5F5"
-                            tools:src="@tools:sample/backgrounds/scenic"/>
+                            android:src="@drawable/qt"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Quick tips"
+                            android:text="Quick Tips"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:textColor="#1A1A1A"
+                            android:textColor="#FFFFFF"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="8dp"/>
 
@@ -184,7 +185,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:background="#FFFFFF"
+                        android:background="#80471C"
                         android:paddingBottom="12dp">
 
                         <FrameLayout
@@ -196,7 +197,7 @@
                                 android:layout_width="60dp"
                                 android:layout_height="60dp"
                                 android:layout_gravity="center"
-                                app:tint="#FFFFFF" />
+                                android:src="@drawable/favorite"/>
 
                         </FrameLayout>
 
@@ -206,7 +207,7 @@
                             android:text="Favorit"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:textColor="#1A1A1A"
+                            android:textColor="#FFFFFF"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="8dp"/>
 
@@ -220,23 +221,5 @@
 
     </ScrollView>
 
-    <!-- Bottom Navbar -->
-    <LinearLayout
-        android:id="@+id/navbar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:background="#D0D0D0"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Navbar"
-            android:textSize="14sp"
-            android:textColor="#666666"/>
-
-    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

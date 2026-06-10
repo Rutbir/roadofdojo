@@ -8,4 +8,6 @@
     <string name="login_status_loading">Memproses login...</string>
     <string name="login_status_success">Login berhasil. Mantap!</string>
     <string name="login_status_failed">Login gagal: %1$s</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

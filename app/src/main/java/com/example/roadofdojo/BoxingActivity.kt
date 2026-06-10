@@ -1,11 +1,9 @@
 package com.example.roadofdojo
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 
 class BoxingActivity : AppCompatActivity() {
 
@@ -17,8 +15,30 @@ class BoxingActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Boxing"
+
         toolbar.setNavigationOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            if (supportFragmentManager.backStackEntryCount > 0) {
+                supportFragmentManager.popBackStack()
+            } else {
+                onBackPressedDispatcher.onBackPressed()
+            }
         }
+
+        if (savedInstanceState == null) {
+            loadFragment(BoxingListFragment(), addToBackStack = false)
+        }
+    }
+
+    fun loadFragment(fragment: Fragment, addToBackStack: Boolean = true) {
+        val transaction = supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+
+        if (addToBackStack) transaction.addToBackStack(null)
+
+        transaction.commit()
+    }
+
+    fun setToolbarTitle(title: String) {
+        supportActionBar?.title = title
     }
 }

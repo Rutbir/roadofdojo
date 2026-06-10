@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Gambar kayu -->
+    <item>
+        <bitmap
+            android:src="@drawable/bg_wood"
+            android:tileMode="disabled"
+            android:gravity="fill"/>
+    </item>
+
+    <!-- Overlay gelap tipis supaya teks tetap terbaca -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#33000000"/>
+        </shape>
+    </item>
+
+</layer-list>
