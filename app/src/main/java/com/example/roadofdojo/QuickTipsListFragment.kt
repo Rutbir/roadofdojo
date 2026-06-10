@@ -37,7 +37,7 @@ class QuickTipsListFragment : Fragment() {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
         val adapter = QuickTipsAdapter { tip ->
-            navigateToDetail(tip.title, tip.content)
+            navigateToDetail(tip.title, tip.content, tip.video)
         }
         recyclerView.adapter = adapter
 
@@ -58,12 +58,13 @@ class QuickTipsListFragment : Fragment() {
         }
     }
 
-    private fun navigateToDetail(tipsTitle: String, tipsBody: String) {
+    private fun navigateToDetail(tipsTitle: String, tipsBody: String, videoUrl: String?) {
         // Kirim judul ke fragment detail via Bundle
         val detailFragment = TipsDetailFragment().apply {
             arguments = Bundle().apply {
                 putString(TipsDetailFragment.ARG_TITLE, tipsTitle)
                 putString(TipsDetailFragment.ARG_BODY, tipsBody)
+                putString(TipsDetailFragment.ARG_VIDEO, videoUrl)
             }
         }
         (activity as? QuickTipsActivity)?.loadFragment(detailFragment)
