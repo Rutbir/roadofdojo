@@ -10,7 +10,7 @@ class QuickTipsRepository {
     suspend fun fetchTips(): List<QuickTip> = withContext(Dispatchers.IO) {
         val url = URL(
             "${BuildConfig.SUPABASE_URL}/rest/v1/quick_tips" +
-                "?select=id,title,content,sort_order&order=sort_order.asc"
+                "?select=id,title,content,sort_order,video&order=sort_order.asc"
         )
         val connection = (url.openConnection() as HttpURLConnection).apply {
             requestMethod = "GET"

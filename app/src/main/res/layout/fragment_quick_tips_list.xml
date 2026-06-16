@@ -12,15 +12,23 @@
         android:padding="12dp"
         android:clipToPadding="false" />
 
-    <TextView
-        android:id="@+id/tvTipsEmpty"
+    <LinearLayout
+        android:id="@+id/llEmptyState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Tidak ada tips."
-        android:textSize="14sp"
-        android:textColor="#1A1A1A"
-        android:visibility="gone" />
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvTipsEmpty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tidak ada tips."
+            android:textSize="14sp"
+            android:textColor="#1A1A1A" />
+
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressTips"

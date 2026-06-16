@@ -4,6 +4,7 @@ data class QuickTip(
     val id: String,
     val title: String,
     val content: String,
-    val sortOrder: Int
+    val sortOrder: Int,
+    val video: String? = null
 )
 
