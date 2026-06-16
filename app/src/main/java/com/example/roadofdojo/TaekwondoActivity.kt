@@ -1,11 +1,8 @@
 package com.example.roadofdojo
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.appcompat.widget.Toolbar
+import com.google.android.material.appbar.MaterialToolbar
 
 class TaekwondoActivity : AppCompatActivity() {
 
@@ -13,10 +10,18 @@ class TaekwondoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_taekwondo)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        // 1. UPDATE GOD-TIER: Panggil MaterialToolbar, bukan Toolbar biasa
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
+
+        // 2. Tampilkan tombol panah "Back"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Taekwondo"
+
+        // 3. PENTING: Matiin title bawaan dari ActionBar
+        // Karena judul "Taekwondo" udah di-handle otomatis sama efek CollapsingToolbar di XML
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        // 4. Fungsi tombol Back (Otomatis jalanin animasi reverse kalau lu pake Shared Element)
         toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
