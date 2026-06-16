@@ -21,4 +21,7 @@
     <string name="login_status_success">Login berhasil. Mantap!</string>
     <string name="login_status_cancelled">Login dibatalkan.</string>
     <string name="login_status_failed">Login gagal: %1$s</string>
+
+    <string name="label_taekwondo">TAEKWONDO</string>
+    <string name="label_boxing">BOXING</string>
 </resources>

@@ -1,13 +1,12 @@
 package com.example.roadofdojo
 
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.appcompat.widget.Toolbar
-import androidx.cardview.widget.CardView
 import android.content.Intent
+import android.os.Bundle
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.card.MaterialCardView
 
 class BelaDiriActivity : AppCompatActivity() {
 
@@ -15,8 +14,8 @@ class BelaDiriActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bela_diri)
 
-        // Setup Toolbar dengan tombol back
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        // Setup Toolbar versi Material Design
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Bela Diri"
@@ -24,18 +23,36 @@ class BelaDiriActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // Card Taekwondo → TaekwondoActivity
-        val cardTaekwondo = findViewById<CardView>(R.id.cardTaekwondo)
+        // Setup Card dan Gambar Taekwondo
+        val cardTaekwondo = findViewById<MaterialCardView>(R.id.cardTaekwondo)
+        val imgTaekwondo = findViewById<ImageView>(R.id.imgTaekwondo)
+
         cardTaekwondo.setOnClickListener {
             val intent = Intent(this, TaekwondoActivity::class.java)
-            startActivity(intent)
+
+            // JURUS GOD-TIER: Animasi Zoom (Shared Element)
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                imgTaekwondo,
+                "animasi_gambar_bela_diri"
+            )
+            startActivity(intent, options.toBundle())
         }
 
-        // Card Boxing → BoxingActivity
-        val cardBoxing = findViewById<CardView>(R.id.cardBoxing)
+        // Setup Card dan Gambar Boxing
+        val cardBoxing = findViewById<MaterialCardView>(R.id.cardBoxing)
+        val imgBoxing = findViewById<ImageView>(R.id.imgBoxing)
+
         cardBoxing.setOnClickListener {
             val intent = Intent(this, BoxingActivity::class.java)
-            startActivity(intent)
+
+            // JURUS GOD-TIER: Animasi Zoom (Shared Element)
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                imgBoxing,
+                "animasi_gambar_bela_diri"
+            )
+            startActivity(intent, options.toBundle())
         }
     }
 }
