@@ -1,12 +1,100 @@
 <resources>
-    <string name="app_name">roadofdojo</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- App Info -->
+    <string name="app_name">Road Of Dojo</string>
+    <string name="desc_profile_image">Foto profil</string>
+
+    <!-- Onboarding Screen -->
+    <string name="onboarding_title_1">Selamat datang di Road Of Dojo</string>
+    <string name="onboarding_description_1">Bangun habit latihan harian langkah demi langkah.</string>
+    <string name="onboarding_title_2">Track progres kamu</string>
+    <string name="onboarding_description_2">Lihat perjalananmu agar tetap konsisten dan termotivasi.</string>
+    <string name="onboarding_title_3">Siap mulai perjalanan?</string>
+    <string name="onboarding_description_3">Lanjut ke login untuk masuk dan mulai berlatih.</string>
+    <string name="onboarding_cta_skip">Lewati</string>
+    <string name="onboarding_cta_next">Lanjut</string>
+    <string name="onboarding_cta_start">Mulai</string>
+
+    <!-- Login Screen -->
     <string name="login_title">Masuk ke Road Of Dojo</string>
     <string name="login_google_button">Lanjut dengan Google</string>
     <string name="login_status_idle">Pilih akun Google buat lanjut.</string>
     <string name="login_status_loading">Memproses login...</string>
     <string name="login_status_success">Login berhasil. Mantap!</string>
+    <string name="login_status_cancelled">Login dibatalkan.</string>
     <string name="login_status_failed">Login gagal: %1$s</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
+    <!-- Beranda Screen -->
+    <string name="beranda_welcome_text">Selamat Bertanding,</string>
+    <string name="beranda_default_username">Fighter!</string>
+    <string name="beranda_streak_title">Streak Latihan Anda</string>
+    <string name="beranda_streak_count">🔥 5 Hari Beruntun!</string>
+    <string name="day_monday_short">S</string>
+    <string name="day_tuesday_short">S</string>
+    <string name="day_wednesday_short">R</string>
+    <string name="day_thursday_short">K</string>
+    <string name="day_friday_short">J</string>
+    <string name="day_saturday_short">S</string>
+    <string name="day_sunday_short">M</string>
+    <string name="beranda_continue_training">Lanjutkan Latihanmu</string>
+    <string name="beranda_taekwondo">Taekwondo</string>
+    <string name="beranda_boxing">Boxing</string>
+    <string name="beranda_locked_emoji">🔒</string>
+    <string name="beranda_coming_soon">Gaya Lain\nSegera Hadir</string>
+    <string name="beranda_favorite_move">Gerakan Favorit</string>
+    <string name="beranda_fire_emoji">🔥</string>
+    <string name="beranda_fav_move_name">Dollyo Chagi</string>
+    <string name="beranda_fav_move_desc">Taekwondo • Roundhouse Kick</string>
+    <string name="beranda_train_button">Latih ➔</string>
+    <string name="beranda_explore">Eksplorasi</string>
+    <string name="beranda_martial_arts_emoji">🥋</string>
+    <string name="beranda_all_techniques">Semua Teknik</string>
+    <string name="beranda_tips_emoji">💡</string>
+    <string name="beranda_quick_tips">Quick Tips</string>
+
+    <!-- Menu & Label Universal -->
+    <string name="label_taekwondo">TAEKWONDO</string>
+    <string name="label_boxing">BOXING</string>
+
+    <!-- Level Kesulitan -->
+    <string name="level_beginner">BEGINNER</string>
+    <string name="level_intermediate">INTERMEDIATE</string>
+    <string name="level_advanced">ADVANCED</string>
+
+    <!-- Detail & List Bela Diri (Universal) -->
+    <string name="title_filosofi">Filosofi &amp; Karakteristik</string>
+    <string name="title_materi_dasar">Materi Dasar</string>
+    <string name="btn_tandai_selesai">Tandai Selesai</string>
+    <string name="btn_latih_kombinasi">Latih Kombinasi</string>
+
+    <!-- Info Khusus Boxing -->
+    <string name="title_sweet_science">The Sweet Science</string>
+    <string name="desc_sweet_science">Tinju (Boxing) bukan sekadar adu fisik, melainkan seni bela diri yang mengandalkan strategi, gerak kaki (footwork), dan ketepatan. Dikenal sebagai \'The Sweet Science\' karena memperhitungkan tiap pukulan dengan sangat matematis.</string>
+    <string name="title_teknik_pukulan">Teknik Dasar Pukulan</string>
+
+    <!-- Nama Gerakan Taekwondo -->
+    <string name="tkd_move_roundhouse">Roundhouse Kick</string>
+    <string name="tkd_move_front">Front Kick</string>
+    <string name="tkd_move_hook">Hook Kick</string>
+    <string name="tkd_move_crescent">Crescent Kick</string>
+    <string name="tkd_move_tornado">Tornado Roundhouse</string>
+    <string name="tkd_move_spinning">Spinning Hook</string>
+
+    <!-- Nama & Deskripsi Gerakan Boxing -->
+    <string name="box_move_jab">Jab Dasar</string>
+    <string name="box_desc_jab">Pukulan lurus ke depan menggunakan tangan terdepan (lead hand). Kunci untuk mengukur jarak, membuka pertahanan lawan, dan memulai kombinasi mematikan.</string>
+
+    <string name="box_move_cross">Cross Pukulan Lurus</string>
+    <string name="box_desc_cross">Pukulan lurus bertenaga penuh dari tangan belakang (rear hand). Mengandalkan putaran pinggul dan bahu untuk menghasilkan daya hancur maksimal.</string>
+
+    <string name="box_move_hook">Hook Kiri dan Kanan</string>
+    <string name="box_desc_hook">Pukulan melingkar jarak dekat hingga menengah yang menargetkan sisi rahang atau rusuk lawan. Sangat efektif untuk menembus guard rapat.</string>
+
+    <string name="box_move_uppercut">Uppercut Kombinasi</string>
+    <string name="box_desc_uppercut">Rangkaian pukulan vertikal mematikan dari bawah ke atas. Menargetkan dagu atau ulu hati, sangat ampuh saat pertarungan jarak dekat (infighting).</string>
+
+    <string name="box_move_combo">Combo 10 Pukulan</string>
+    <string name="box_desc_combo">Rangkaian kombinasi pukulan beruntun tingkat tinggi (volume punching) untuk menekan lawan secara brutal, menguras stamina, dan mencari celah KO.</string>
+
+    <string name="box_move_slip_counter">Slip and Counter</string>
+    <string name="box_desc_slip_counter">Teknik elakan tingkat mahir. Menggeser kepala dari garis serangan lawan (slip) dan secara bersamaan membalas dengan pukulan telak (counter) saat pertahanan terbuka.</string>
 </resources>
