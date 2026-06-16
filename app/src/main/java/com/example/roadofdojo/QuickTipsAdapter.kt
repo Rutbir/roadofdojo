@@ -35,12 +35,19 @@ class QuickTipsAdapter(
         private val onItemClick: (QuickTip) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
+
         private val title: TextView = itemView.findViewById(R.id.tvTipTitle)
+        private val description: TextView = itemView.findViewById(R.id.tvTipDescription)
 
         fun bind(item: QuickTip) {
+
             title.text = item.title
+
+
+            description.text = item.content
+
+
             itemView.setOnClickListener { onItemClick(item) }
         }
     }
 }
-
