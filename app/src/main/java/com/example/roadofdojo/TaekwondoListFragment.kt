@@ -97,8 +97,10 @@ class TaekwondoListFragment : Fragment() {
 
                 tvTitle.text = move.moveName ?: move.title ?: "Unnamed"
 
+                // DI SINI PERUBAHANNYA: Kita ambil move.moveId dan lempar ke fungsi navigasi
                 itemView.setOnClickListener {
                     navigateToDetail(
+                        moveId = move.moveId, // <-- Gunakan moveId sesuai data class Move
                         namaGerakan = tvTitle.text.toString(),
                         level = move.level ?: "BEGINNER",
                         deskripsi = move.description ?: "",
@@ -156,10 +158,11 @@ class TaekwondoListFragment : Fragment() {
         }
     }
 
-    // Fungsi navigasi yang di-upgrade buat ngirim deskripsi sekaligus
-    private fun navigateToDetail(namaGerakan: String, level: String, deskripsi: String, videoUrl: String, imageUrl: String) {
+    // FUNGSI NAVIGASI DI-UPGRADE: Sekarang menerima parameter moveId dan memasukkannya ke Bundle
+    private fun navigateToDetail(moveId: String, namaGerakan: String, level: String, deskripsi: String, videoUrl: String, imageUrl: String) {
         val detailFragment = TaekwondoDetailFragment().apply {
             arguments = Bundle().apply {
+                putString(TaekwondoDetailFragment.ARG_MOVE_ID, moveId) // <-- Bundle nangkep ID-nya di sini
                 putString(TaekwondoDetailFragment.ARG_NAMA, namaGerakan)
                 putString(TaekwondoDetailFragment.ARG_LEVEL, level)
                 putString(TaekwondoDetailFragment.ARG_DESC, deskripsi)

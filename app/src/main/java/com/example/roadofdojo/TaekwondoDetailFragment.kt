@@ -13,8 +13,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.net.toUri
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +28,7 @@ import java.net.URL
 class TaekwondoDetailFragment : Fragment() {
 
     companion object {
+        const val ARG_MOVE_ID = "move_id" // PENTING: ID gerakan dari database
         const val ARG_NAMA  = "nama_gerakan"
         const val ARG_LEVEL = "level_gerakan"
         const val ARG_DESC  = "desc_gerakan"
@@ -34,6 +37,12 @@ class TaekwondoDetailFragment : Fragment() {
     }
 
     private var moveVideoWebView: WebView? = null
+
+    // Inisialisasi Repository buat manggil Supabase
+    private val repository = MovesRepository()
+
+    // TODO: Ganti ID ini pakai ID user yang asli dari session login Supabase lu
+    private val currentUserId = "11111111-2222-3333-4444-555555555555"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,27 +57,32 @@ class TaekwondoDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // 1. Ambil data dari Bundle/Arguments
+        val moveId      = arguments?.getString(ARG_MOVE_ID) ?: ""
         val namaGerakan = arguments?.getString(ARG_NAMA)  ?: "Dollyo Chagi"
         val level       = arguments?.getString(ARG_LEVEL) ?: "BEGINNER"
-        val desc        = arguments?.getString(ARG_DESC)  ?: "Instruksi langkah demi langkah akan tampil di sini. Putar pinggul dan lepaskan tendangan!"
+        val desc        = arguments?.getString(ARG_DESC)  ?: "Instruksi langkah demi langkah akan tampil di sini."
         val videoUrl    = arguments?.getString(ARG_VIDEO).orEmpty()
         val imageUrl    = arguments?.getString(ARG_IMAGE).orEmpty()
 
-        // 2. Set judul Toolbar (mengambil dari versi upstream sebelumnya)
+        // 2. Set judul Toolbar
         try {
             (activity as? TaekwondoActivity)?.setToolbarTitle(namaGerakan)
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
-        // 3. Hubungkan komponen UI
+        // 3. Hubungkan komponen UI utama
         val tvTitle = view.findViewById<TextView>(R.id.tvGerakanTitle)
         val tvLevel = view.findViewById<TextView>(R.id.tvLevel)
         val tvDesc  = view.findViewById<TextView>(R.id.tvGerakanDesc)
         val cardLevel = view.findViewById<MaterialCardView>(R.id.cardLevel)
         val btnSelesai = view.findViewById<MaterialButton>(R.id.btnSelesaiLatihan)
 
-        // Komponen Video & Gambar (Pakai safe-call / nullable untuk keamanan)
+        // Komponen UI untuk Status Evaluasi (PASTIKAN ID INI ADA DI fragment_taekwondo_detail.xml)
+        val cardStatus = view.findViewById<MaterialCardView>(R.id.cardStatus)
+        val tvStatusText = view.findViewById<TextView>(R.id.tvStatusText)
+
+        // Komponen Video & Gambar
         val imgDemo = view.findViewById<ImageView?>(R.id.imgGerakanDemo)
         val overlay = view.findViewById<View?>(R.id.viewOverlay)
         val playBtn = view.findViewById<ImageView?>(R.id.ivPlayOverlay)
@@ -80,25 +94,34 @@ class TaekwondoDetailFragment : Fragment() {
         tvLevel.text = level.uppercase()
         tvDesc.text  = desc
 
-        // 5. Set warna badge berdasarkan level
-        when (level.uppercase()) {
-            "BEGINNER" -> cardLevel.setCardBackgroundColor(Color.parseColor("#4CAF50"))
-            "INTERMEDIATE" -> cardLevel.setCardBackgroundColor(Color.parseColor("#FF9800"))
-            "ADVANCED" -> cardLevel.setCardBackgroundColor(Color.parseColor("#F44336"))
-            else -> cardLevel.setCardBackgroundColor(Color.parseColor("#FFD700"))
+        // 5. Cek status evaluasi dari Supabase saat layar dibuka
+        if (moveId.isNotBlank()) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                val refleksi = repository.getRefleksiUser(currentUserId, moveId)
+                if (refleksi != null) {
+                    updateUIRefleksi(refleksi.note, cardStatus, tvStatusText)
+                }
+            }
         }
 
-        // 6. Muat gambar demo kalau ada imageUrl
+        // 6. Set warna badge berdasarkan level
+        when (level.uppercase()) {
+            "BEGINNER" -> cardLevel.setCardBackgroundColor("#4CAF50".toColorInt())
+            "INTERMEDIATE" -> cardLevel.setCardBackgroundColor("#FF9800".toColorInt())
+            "ADVANCED" -> cardLevel.setCardBackgroundColor("#F44336".toColorInt())
+            else -> cardLevel.setCardBackgroundColor("#FFD700".toColorInt())
+        }
+
+        // 7. Muat gambar demo kalau ada imageUrl
         if (imageUrl.isNotBlank() && imgDemo != null) {
             viewLifecycleOwner.lifecycleScope.launch {
                 loadImageInto(imgDemo, imageUrl)
             }
         }
 
-        // 7. Logika pemutar video
+        // 8. Logika pemutar video
         val playVideoAction = View.OnClickListener {
             if (videoUrl.isNotBlank()) {
-                // Sembunyikan cover & play button
                 overlay?.visibility = View.GONE
                 playBtn?.visibility = View.GONE
                 imgDemo?.visibility = View.GONE
@@ -122,14 +145,82 @@ class TaekwondoDetailFragment : Fragment() {
             }
         }
 
-        // Pasang listener supaya ngeklik gambar, tombol play, atau area gelap bakal muter video
         imgDemo?.setOnClickListener(playVideoAction)
         overlay?.setOnClickListener(playVideoAction)
         playBtn?.setOnClickListener(playVideoAction)
 
-        // 8. Action Button Selesai
+        // 9. Action Button Selesai -> Memicu Pop-Up Evaluasi
         btnSelesai.setOnClickListener {
-            Toast.makeText(requireContext(), "Mantap! Latihan $namaGerakan selesai.", Toast.LENGTH_SHORT).show()
+            if (moveId.isNotBlank()) {
+                tampilkanDialogEvaluasi(moveId, namaGerakan, cardStatus, tvStatusText)
+            } else {
+                Toast.makeText(requireContext(), "Error: ID Gerakan tidak ditemukan!", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    // Fungsi untuk memunculkan Bottom Sheet Dialog & Simpan Evaluasi ke Supabase
+    private fun tampilkanDialogEvaluasi(
+        moveId: String,
+        namaGerakan: String,
+        cardStatus: MaterialCardView,
+        tvStatusText: TextView
+    ) {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        // Berikan parent view agar layout params terhitung dengan benar
+        val dialogView = layoutInflater.inflate(R.layout.dialog_evaluasi, null)
+        bottomSheetDialog.setContentView(dialogView)
+
+        val btnKurang = dialogView.findViewById<MaterialButton>(R.id.btnEvalKurang)
+        val btnLumayan = dialogView.findViewById<MaterialButton>(R.id.btnEvalLumayan)
+        val btnMantap = dialogView.findViewById<MaterialButton>(R.id.btnEvalMantap)
+
+        // Helper lokal untuk simpan data dan update UI sekaligus
+        fun simpanDanUpdate(note: String, pesanToast: String) {
+            Toast.makeText(requireContext(), pesanToast, Toast.LENGTH_SHORT).show()
+            viewLifecycleOwner.lifecycleScope.launch {
+                repository.simpanRefleksi(currentUserId, moveId, note)
+                updateUIRefleksi(note, cardStatus, tvStatusText)
+            }
+            bottomSheetDialog.dismiss()
+        }
+
+        btnKurang.setOnClickListener {
+            simpanDanUpdate("Masih Kaku", "Tetap semangat! Latihan terus $namaGerakan.")
+        }
+
+        btnLumayan.setOnClickListener {
+            simpanDanUpdate("Lumayan", "Nice! Dikit lagi $namaGerakan lu sempurna.")
+        }
+
+        btnMantap.setOnClickListener {
+            simpanDanUpdate("GG Banget", "GG Banget! Lu udah nguasain $namaGerakan.")
+        }
+
+        bottomSheetDialog.show()
+    }
+
+    // Fungsi untuk ganti warna Card Status sesuai hasil evaluasi dari DB
+    private fun updateUIRefleksi(note: String, cardStatus: MaterialCardView, tvStatusText: TextView) {
+        cardStatus.visibility = View.VISIBLE
+        tvStatusText.text = "Status: $note"
+
+        when (note) {
+            "Masih Kaku" -> {
+                cardStatus.setCardBackgroundColor("#33FF5252".toColorInt()) // Merah transparan
+                cardStatus.strokeColor = "#FF5252".toColorInt()
+                tvStatusText.setTextColor("#FF5252".toColorInt())
+            }
+            "Lumayan" -> {
+                cardStatus.setCardBackgroundColor("#33FF9800".toColorInt()) // Orange transparan
+                cardStatus.strokeColor = "#FF9800".toColorInt()
+                tvStatusText.setTextColor("#FF9800".toColorInt())
+            }
+            "GG Banget" -> {
+                cardStatus.setCardBackgroundColor("#33FFD700".toColorInt()) // Kuning emas transparan
+                cardStatus.strokeColor = "#FFD700".toColorInt()
+                tvStatusText.setTextColor("#FFD700".toColorInt())
+            }
         }
     }
 
@@ -215,7 +306,6 @@ class TaekwondoDetailFragment : Fragment() {
         }
     }
 
-    // Fungsi suspend untuk download dan pasang gambar (Coroutines)
     private suspend fun loadImageInto(imageView: ImageView, urlStr: String) {
         try {
             val bitmap = withContext(Dispatchers.IO) {

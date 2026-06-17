@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.Dispatchers
@@ -131,11 +132,45 @@ class BoxingDetailFragment : Fragment() {
         playBtn?.setOnClickListener(playVideoAction)
         imgDemo?.setOnClickListener(playVideoAction)
 
-        // 6. Tombol Selesai
+        // 6. Tombol Selesai -> Memicu Pop-Up Evaluasi
         btnSelesai.setOnClickListener {
-            Toast.makeText(requireContext(), "Mantap! Latihan $namaGerakan selesai.", Toast.LENGTH_SHORT).show()
-            // Nantinya di sini kamu bisa tambahin logika update progress/XP user
+            tampilkanDialogEvaluasi(namaGerakan)
         }
+    }
+
+    // Fungsi untuk memunculkan Bottom Sheet Dialog Evaluasi
+    private fun tampilkanDialogEvaluasi(namaGerakan: String) {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+
+        // Memanggil layout XML pop-up yang sama dengan yang di Taekwondo
+        val view = layoutInflater.inflate(R.layout.dialog_evaluasi, null)
+        bottomSheetDialog.setContentView(view)
+
+        // Hubungkan tombol-tombol di dalam pop-up
+        val btnKurang = view.findViewById<MaterialButton>(R.id.btnEvalKurang)
+        val btnLumayan = view.findViewById<MaterialButton>(R.id.btnEvalLumayan)
+        val btnMantap = view.findViewById<MaterialButton>(R.id.btnEvalMantap)
+
+        // Set action untuk masing-masing tingkat evaluasi
+        btnKurang.setOnClickListener {
+            Toast.makeText(requireContext(), "Tetap semangat! Latihan terus $namaGerakan.", Toast.LENGTH_SHORT).show()
+            // TODO: Tambahkan logika untuk update database (misal: progress = 1)
+            bottomSheetDialog.dismiss()
+        }
+
+        btnLumayan.setOnClickListener {
+            Toast.makeText(requireContext(), "Nice! Dikit lagi $namaGerakan lu sempurna.", Toast.LENGTH_SHORT).show()
+            // TODO: Tambahkan logika untuk update database (misal: progress = 2)
+            bottomSheetDialog.dismiss()
+        }
+
+        btnMantap.setOnClickListener {
+            Toast.makeText(requireContext(), "GG Banget! Lu udah nguasain $namaGerakan.", Toast.LENGTH_SHORT).show()
+            // TODO: Tambahkan logika untuk update database (misal: progress = 3)
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetDialog.show()
     }
 
     override fun onDestroyView() {
