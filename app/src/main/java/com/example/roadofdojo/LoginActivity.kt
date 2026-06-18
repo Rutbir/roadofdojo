@@ -74,6 +74,7 @@ class LoginActivity : AppCompatActivity() {
         val callbackUri = callbackIntent?.data ?: return
         val expected = Uri.parse(BuildConfig.APP_REDIRECT_URL)
 
+
         val sameDestination = callbackUri.scheme == expected.scheme && callbackUri.host == expected.host
         if (!sameDestination) return
 
@@ -95,9 +96,19 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
+// AMBIL USER ID DARI TOKEN (Ini perbaikannya)
+        val userId = decodeUserIdFromToken(accessToken)
+
+        if (userId.isNullOrBlank()) {
+            Log.e(logTag, "Gagal mendapatkan User ID dari token")
+            renderIdleState("Gagal mengidentifikasi User")
+            return
+        }
+
         getSharedPreferences(AuthPrefs.PREFS_NAME, MODE_PRIVATE)
             .edit()
             .putBoolean(AuthPrefs.KEY_AUTHENTICATED, true)
+            .putString(AuthPrefs.KEY_USER_ID, userId) // Simpan ID-nya di sini!
             .apply()
 
         Log.d(logTag, "OAuth sukses, session flag disimpan")
@@ -143,6 +154,23 @@ class LoginActivity : AppCompatActivity() {
         googleButton.isEnabled = true
         progressBar.visibility = View.GONE
         statusText.text = message
+    }
+    private fun decodeUserIdFromToken(token: String): String? {
+        return try {
+            // JWT terdiri dari 3 bagian yang dipisah titik (header.payload.signature)
+            val parts = token.split(".")
+            if (parts.size < 2) return null
+
+            // Bagian tengah (index 1) adalah payload yang berisi data user
+            val payload = String(android.util.Base64.decode(parts[1], android.util.Base64.URL_SAFE))
+            val json = org.json.JSONObject(payload)
+
+            // Di Supabase, User ID disimpan di field "sub"
+            json.optString("sub")
+        } catch (e: Exception) {
+            Log.e(logTag, "Error decoding token", e)
+            null
+        }
     }
 }
 

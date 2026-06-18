@@ -12,24 +12,28 @@
         android:roundIcon="@mipmap/logorod_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RoadOfDojo">
-
+        <activity
+            android:name="roadofdojo.FavoriteListActivity"
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
-                    android:scheme="roadofdojo"
-                    android:host="login-callback" />
+                    android:host="login-callback"
+                    android:scheme="roadofdojo" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".BerandaActivity"
             android:exported="true" />
@@ -43,12 +47,11 @@
             android:name=".QuickTipsActivity"
             android:exported="false" />
         <activity
-            android:name=".FavoritActivity"
+            android:name=".FavoriteListActivity"
             android:exported="false" />
         <activity
             android:name=".BelaDiriActivity"
             android:exported="false" />
-
     </application>
 
 </manifest>

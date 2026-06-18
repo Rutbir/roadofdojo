@@ -24,7 +24,7 @@
     <string name="login_status_failed">Login gagal: %1$s</string>
 
     <!-- Beranda Screen -->
-    <string name="beranda_welcome_text">Selamat Bertanding,</string>
+    <string name="beranda_welcome_text">Selamat Berlatih,</string>
     <string name="beranda_default_username">Fighter!</string>
     <string name="beranda_streak_title">Streak Latihan Anda</string>
     <string name="beranda_streak_count">🔥 5 Hari Beruntun!</string>
@@ -42,8 +42,7 @@
     <string name="beranda_coming_soon">Gaya Lain\nSegera Hadir</string>
     <string name="beranda_favorite_move">Gerakan Favorit</string>
     <string name="beranda_fire_emoji">🔥</string>
-    <string name="beranda_fav_move_name">Dollyo Chagi</string>
-    <string name="beranda_fav_move_desc">Taekwondo • Roundhouse Kick</string>
+    <string name="beranda_fav_move_name">Lihat Gerakan Favoritmu</string>
     <string name="beranda_train_button">Latih ➔</string>
     <string name="beranda_explore">Eksplorasi</string>
     <string name="beranda_martial_arts_emoji">🥋</string>
