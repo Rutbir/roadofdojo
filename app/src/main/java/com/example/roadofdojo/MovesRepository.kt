@@ -8,6 +8,7 @@ import java.net.URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.UUID
+
 class MovesRepository {
 
     suspend fun fetchMovesByCategory(categoryId: Int): List<Move> = withContext(Dispatchers.IO) {
@@ -40,21 +41,24 @@ class MovesRepository {
         MovesJsonParser.parse(responseBody)
     }
 
-    // Fungsi untuk narik status refleksi sebelumnya (Pakai HTTP URL Connection)
+    // Fungsi untuk narik status refleksi terbaru (Pakai HTTP URL Connection)
     suspend fun getRefleksiUser(userId: String, moveId: String): Refleksi? = withContext(Dispatchers.IO) {
-        // PROTEKSI 1: Pastikan string yang masuk adalah UUID yang valid
+        // PROTEKSI: Pastikan string yang masuk adalah UUID yang valid
         try {
-            java.util.UUID.fromString(userId)
-            java.util.UUID.fromString(moveId)
+            UUID.fromString(userId)
+            UUID.fromString(moveId)
         } catch (e: IllegalArgumentException) {
             println("Error getRefleksi: userId atau moveId bukan format UUID valid")
             return@withContext null
         }
 
         try {
+            // PERBAIKAN: Gunakan 1 URL saja.
+            // Tambahkan order=created_at.desc untuk ambil yang paling baru.
+            // Tambahkan limit=1 untuk menghemat kuota data karena kita cuma butuh 1 data terakhir.
             val url = URL(
                 "${BuildConfig.SUPABASE_URL}/rest/v1/refleksi" +
-                        "?user_id=eq.$userId&move_id=eq.$moveId&select=*"
+                        "?user_id=eq.$userId&move_id=eq.$moveId&select=*&order=created_at.desc&limit=1"
             )
 
             val connection = (url.openConnection() as HttpURLConnection).apply {
@@ -70,7 +74,7 @@ class MovesRepository {
             if (responseCode in 200..299) {
                 val responseBody = connection.inputStream.bufferedReader().use { it.readText() }
 
-                val jsonArray = org.json.JSONArray(responseBody)
+                val jsonArray = JSONArray(responseBody)
                 if (jsonArray.length() > 0) {
                     val jsonObj = jsonArray.getJSONObject(0)
                     return@withContext Refleksi(
@@ -81,6 +85,8 @@ class MovesRepository {
                         note = jsonObj.getString("note")
                     )
                 }
+            } else {
+                println("Error getRefleksi: Supabase me-return response code $responseCode")
             }
             null
         } catch (e: Exception) {
@@ -91,30 +97,32 @@ class MovesRepository {
 
     // Fungsi untuk nyimpen/update evaluasi (Pakai HTTP URL Connection)
     suspend fun simpanRefleksi(userId: String, moveId: String, note: String) = withContext(Dispatchers.IO) {
-        // PROTEKSI 2: Pastikan string yang masuk adalah UUID yang valid
+        // PROTEKSI: Pastikan string yang masuk adalah UUID yang valid
         try {
-            java.util.UUID.fromString(userId)
-            java.util.UUID.fromString(moveId)
+            UUID.fromString(userId)
+            UUID.fromString(moveId)
         } catch (e: IllegalArgumentException) {
             println("Error simpanRefleksi: userId atau moveId bukan format UUID valid")
             return@withContext
         }
 
         try {
-            val url = URL("${BuildConfig.SUPABASE_URL}/rest/v1/refleksi")
+            // PERBAIKAN: Tambahkan parameter on_conflict
+            // Supaya Supabase tahu dia harus me-replace data jika kombinasi user_id & move_id sudah ada
+            val url = URL("${BuildConfig.SUPABASE_URL}/rest/v1/refleksi?on_conflict=user_id,move_id")
             val connection = (url.openConnection() as HttpURLConnection).apply {
                 requestMethod = "POST"
                 setRequestProperty("apikey", BuildConfig.SUPABASE_ANON_KEY)
                 setRequestProperty("Authorization", "Bearer ${BuildConfig.SUPABASE_ANON_KEY}")
                 setRequestProperty("Content-Type", "application/json")
+                // Header ini akan melakukan UPSERT (Insert kalau baru, Update kalau sudah ada)
                 setRequestProperty("Prefer", "resolution=merge-duplicates")
                 doOutput = true
                 connectTimeout = 15_000
                 readTimeout = 15_000
             }
 
-            // Dikirim sebagai String, Supabase yang bakal nge-cast jadi UUID
-            val jsonBody = org.json.JSONObject().apply {
+            val jsonBody = JSONObject().apply {
                 put("user_id", userId)
                 put("move_id", moveId)
                 put("note", note)
