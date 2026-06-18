@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,7 +43,8 @@ class TaekwondoDetailFragment : Fragment() {
     private val repository = MovesRepository()
 
     // TODO: Ganti ID ini pakai ID user yang asli dari session login Supabase lu
-    private val currentUserId = "11111111-2222-3333-4444-555555555555"
+    private lateinit var currentUserId: String
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +57,9 @@ class TaekwondoDetailFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val prefs = requireContext().getSharedPreferences(AuthPrefs.PREFS_NAME, Context.MODE_PRIVATE)
+        currentUserId = prefs.getString(AuthPrefs.KEY_USER_ID, "") ?: ""
+
 
         // 1. Ambil data dari Bundle/Arguments
         val moveId      = arguments?.getString(ARG_MOVE_ID) ?: ""

@@ -1,5 +1,7 @@
 package com.example.roadofdojo
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Refleksi(
     val refleksi_id: String? = null,
     val created_at: String? = null,
