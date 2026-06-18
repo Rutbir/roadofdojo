@@ -88,7 +88,6 @@ class BoxingListFragment : Fragment() {
             }
 
             for ((i, move) in pair.withIndex()) {
-                // Pastikan kamu punya file res/layout/item_move.xml
                 val itemView = layoutInflater.inflate(R.layout.item_move, row, false)
 
                 val lp = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f).apply {
@@ -101,9 +100,10 @@ class BoxingListFragment : Fragment() {
 
                 tvTitle.text = move.moveName ?: move.title ?: "Unnamed"
 
-                // Aksi saat card gerakan diklik, lempar semua data ke Detail Fragment
+                // PERBAIKAN: Sekarang move.moveId ikut dilempar ke fungsi navigasi
                 itemView.setOnClickListener {
                     navigateToDetail(
+                        moveId = move.moveId, // <-- Menyertakan ID dari data class Move
                         namaGerakan = tvTitle.text.toString(),
                         level = move.level ?: "BEGINNER",
                         deskripsi = move.description ?: "",
@@ -118,7 +118,7 @@ class BoxingListFragment : Fragment() {
                         loadImageInto(img, move.imageUrl)
                     }
                 } else {
-                    img.setImageResource(R.drawable.boxing) // Pastikan gambar ini ada di res/drawable
+                    img.setImageResource(R.drawable.boxing)
                 }
 
                 row.addView(itemView)
@@ -168,10 +168,11 @@ class BoxingListFragment : Fragment() {
         }
     }
 
-    // Bawa parameter lengkap ke BoxingDetailFragment
-    private fun navigateToDetail(namaGerakan: String, level: String, deskripsi: String, videoUrl: String, imageUrl: String) {
+    // PERBAIKAN: Menambahkan parameter moveId dan memasukkannya ke Bundle key ARG_MOVE_ID milik BoxingDetailFragment
+    private fun navigateToDetail(moveId: String, namaGerakan: String, level: String, deskripsi: String, videoUrl: String, imageUrl: String) {
         val detailFragment = BoxingDetailFragment().apply {
             arguments = Bundle().apply {
+                putString(BoxingDetailFragment.ARG_MOVE_ID, moveId) // <-- Mengirim ID gerakan ke detail page
                 putString(BoxingDetailFragment.ARG_NAMA, namaGerakan)
                 putString(BoxingDetailFragment.ARG_LEVEL, level)
                 putString(BoxingDetailFragment.ARG_DESC, deskripsi)
