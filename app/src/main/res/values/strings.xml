@@ -24,7 +24,7 @@
     <string name="login_status_failed">Login gagal: %1$s</string>
 
     <!-- Beranda Screen -->
-    <string name="beranda_welcome_text">Selamat Bertanding,</string>
+    <string name="beranda_welcome_text">Selamat Berlatih,</string>
     <string name="beranda_default_username">Fighter!</string>
     <string name="beranda_streak_title">Streak Latihan Anda</string>
     <string name="beranda_streak_count">🔥 5 Hari Beruntun!</string>

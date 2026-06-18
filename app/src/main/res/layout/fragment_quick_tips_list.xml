@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_wood_overlay">
+    android:background="@drawable/bg_dojo_dark_premium">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
