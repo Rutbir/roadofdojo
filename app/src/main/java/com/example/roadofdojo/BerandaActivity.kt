@@ -1,20 +1,74 @@
 package com.example.roadofdojo
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.ImageView
-import android.widget.Toast // Wajib ditambahin nih bro buat pop-up sementara
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.card.MaterialCardView
-
+import kotlinx.coroutines.launch
 class BerandaActivity : AppCompatActivity() {
+
+    private val repository = MovesRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_beranda)
 
         initViews()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadStreakData()
+    }
+
+    private fun loadStreakData() {
+        val prefs = getSharedPreferences(AuthPrefs.PREFS_NAME, Context.MODE_PRIVATE)
+        val currentUserId = prefs.getString(AuthPrefs.KEY_USER_ID, "") ?: ""
+        if (currentUserId.isBlank()) return
+
+        lifecycleScope.launch {
+            // Ambil dari Supabase
+            val streakJson = repository.getStreakUser(currentUserId)
+            var currentStreak = 0
+
+            if (streakJson != null) {
+                currentStreak = streakJson.optInt("current_streak", 0)
+            }
+
+            // Update Tulisan
+            val txtStreakCount = findViewById<TextView>(R.id.txtStreakCount)
+            txtStreakCount.text = "$currentStreak Hari Beruntun!"
+
+            // Update 7 Bulatan Hari (S S R K J S M)
+            val llStreakDays = findViewById<LinearLayout>(R.id.llStreakDaysContainer)
+            if (llStreakDays != null) {
+                // Maksimal 7 bulatan yang bisa menyala
+                val maxActive = minOf(currentStreak, 7)
+
+                for (i in 0 until 7) {
+                    val card = llStreakDays.getChildAt(i) as? MaterialCardView
+                    val tv = card?.getChildAt(0) as? TextView
+
+                    if (i < maxActive) {
+                        // Aktif: Bulatan warna Kuning
+                        card?.setCardBackgroundColor(Color.parseColor("#FFD700"))
+                        tv?.setTextColor(Color.parseColor("#121212"))
+                    } else {
+                        // Mati: Bulatan warna Abu-abu Transparan
+                        card?.setCardBackgroundColor(Color.parseColor("#33FFFFFF"))
+                        tv?.setTextColor(Color.parseColor("#888888"))
+                    }
+                }
+            }
+        }
     }
 
     private fun initViews() {
@@ -49,8 +103,8 @@ class BerandaActivity : AppCompatActivity() {
         // 3. JURUS AMAN SEMENTARA: Card Gerakan Favorit (Pakai Toast)
         val cardGerakanFavorit = findViewById<MaterialCardView>(R.id.cardGerakanFavorit)
         cardGerakanFavorit.setOnClickListener {
-            // Munculin pop-up kecil, besok lu tinggal ganti kode di dalem sini pake Intent
-            Toast.makeText(this, "THIS FEATURE IS ON PROGRESS!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, FavoriteListActivity::class.java)
+            startActivity(intent)
         }
 
         // 4. GRID MENU: Semua Teknik → BelaDiriActivity

@@ -29,6 +29,21 @@ class TaekwondoActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             loadFragment(TaekwondoListFragment())
         }
+        val openDetail = intent.getBooleanExtra("OPEN_DETAIL", false)
+        if (openDetail) {
+            val detailFragment = TaekwondoDetailFragment().apply {
+                arguments = Bundle().apply {
+                    putString(TaekwondoDetailFragment.ARG_MOVE_ID, intent.getStringExtra("MOVE_ID"))
+                    putString(TaekwondoDetailFragment.ARG_NAMA, intent.getStringExtra("NAMA_GERAKAN"))
+                    putString(TaekwondoDetailFragment.ARG_LEVEL, intent.getStringExtra("LEVEL_GERAKAN"))
+                    putString(TaekwondoDetailFragment.ARG_DESC, intent.getStringExtra("DESC_GERAKAN"))
+                    putString(TaekwondoDetailFragment.ARG_VIDEO, intent.getStringExtra("VIDEO_URL"))
+                    putString(TaekwondoDetailFragment.ARG_IMAGE, intent.getStringExtra("IMAGE_URL"))
+                }
+            }
+            // Gunakan fungsi loadFragment milik Activity kamu
+            loadFragment(detailFragment)
+        }
     }
 
     // FUNGSI INI YANG DIPANGGIL SAMA TaekwondoListFragment TADI
@@ -55,4 +70,5 @@ class TaekwondoActivity : AppCompatActivity() {
     fun setToolbarTitle(title: String) {
         supportActionBar?.title = title
     }
+
 }

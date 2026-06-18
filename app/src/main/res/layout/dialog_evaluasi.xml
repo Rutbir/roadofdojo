@@ -41,7 +41,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sejujurnya, seberapa menguasai lu sama gerakan ini?"
+                android:text="Setelah latihan gerakan ini, apakah kamu sudah merasa menguasai gerakan ini?"
                 android:textColor="#AAAAAA"
                 android:textSize="14sp"
                 android:gravity="center"
