@@ -69,7 +69,7 @@ class BoxingDetailFragment : Fragment() {
 
         // 2. Set judul Toolbar (opsional jika dipanggil dari BoxingActivity)
         try {
-            // (activity as? BoxingActivity)?.setToolbarTitle(namaGerakan)
+            (activity as? BoxingActivity)?.setToolbarTitle(namaGerakan)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -80,6 +80,10 @@ class BoxingDetailFragment : Fragment() {
         val tvDesc  = view.findViewById<TextView>(R.id.tvGerakanDesc)
         val cardLevel = view.findViewById<MaterialCardView>(R.id.cardLevel)
         val btnSelesai = view.findViewById<MaterialButton>(R.id.btnSelesaiLatihan)
+
+        // Deklarasi Komponen Favorit yang sebelumnya tertinggal
+        val ivFavorite = view.findViewById<ImageView>(R.id.ivFavorite)
+        var isFavorited = false
 
         // Komponen UI untuk Status Evaluasi
         val cardStatus = view.findViewById<MaterialCardView>(R.id.cardStatus)
@@ -158,6 +162,54 @@ class BoxingDetailFragment : Fragment() {
                 tampilkanDialogEvaluasi(moveId, namaGerakan, cardStatus, tvStatusText)
             } else {
                 Toast.makeText(requireContext(), "Error: ID Gerakan tidak ditemukan!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // ==========================================
+        // 10. FITUR FAVORIT
+        // ==========================================
+        fun updateFavoriteIcon(status: Boolean) {
+            if (status) {
+                ivFavorite.setImageResource(android.R.drawable.btn_star_big_on)
+                ivFavorite.setColorFilter(Color.parseColor("#FF5252"))
+            } else {
+                ivFavorite.setImageResource(android.R.drawable.btn_star_big_off)
+                ivFavorite.setColorFilter(Color.parseColor("#FFFFFF"))
+            }
+        }
+
+        if (moveId.isNotBlank()) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                isFavorited = repository.cekIsFavorite(currentUserId, moveId)
+                updateFavoriteIcon(isFavorited)
+            }
+        }
+
+        ivFavorite.setOnClickListener {
+            if (moveId.isBlank()) return@setOnClickListener
+
+            it.animate().scaleX(1.2f).scaleY(1.2f).setDuration(100).withEndAction {
+                it.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
+            }.start()
+
+            isFavorited = !isFavorited
+            updateFavoriteIcon(isFavorited)
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                val sukses = if (isFavorited) {
+                    repository.tambahFavorite(currentUserId, moveId)
+                } else {
+                    repository.hapusFavorite(currentUserId, moveId)
+                }
+
+                if (!sukses) {
+                    isFavorited = !isFavorited
+                    updateFavoriteIcon(isFavorited)
+                    Toast.makeText(requireContext(), "Gagal mengupdate favorit", Toast.LENGTH_SHORT).show()
+                } else {
+                    val pesan = if (isFavorited) "Ditambahkan ke Favorit" else "Dihapus dari Favorit"
+                    Toast.makeText(requireContext(), pesan, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

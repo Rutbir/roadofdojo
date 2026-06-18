@@ -29,7 +29,7 @@ import java.net.URL
 class TaekwondoDetailFragment : Fragment() {
 
     companion object {
-        const val ARG_MOVE_ID = "move_id" // PENTING: ID gerakan dari database
+        const val ARG_MOVE_ID = "move_id"
         const val ARG_NAMA  = "nama_gerakan"
         const val ARG_LEVEL = "level_gerakan"
         const val ARG_DESC  = "desc_gerakan"
@@ -38,13 +38,8 @@ class TaekwondoDetailFragment : Fragment() {
     }
 
     private var moveVideoWebView: WebView? = null
-
-    // Inisialisasi Repository buat manggil Supabase
     private val repository = MovesRepository()
-
-    // TODO: Ganti ID ini pakai ID user yang asli dari session login Supabase lu
     private lateinit var currentUserId: String
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,7 +54,6 @@ class TaekwondoDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val prefs = requireContext().getSharedPreferences(AuthPrefs.PREFS_NAME, Context.MODE_PRIVATE)
         currentUserId = prefs.getString(AuthPrefs.KEY_USER_ID, "") ?: ""
-
 
         // 1. Ambil data dari Bundle/Arguments
         val moveId      = arguments?.getString(ARG_MOVE_ID) ?: ""
@@ -82,8 +76,10 @@ class TaekwondoDetailFragment : Fragment() {
         val tvDesc  = view.findViewById<TextView>(R.id.tvGerakanDesc)
         val cardLevel = view.findViewById<MaterialCardView>(R.id.cardLevel)
         val btnSelesai = view.findViewById<MaterialButton>(R.id.btnSelesaiLatihan)
+        val ivFavorite = view.findViewById<ImageView>(R.id.ivFavorite)
+        var isFavorited = false
 
-        // Komponen UI untuk Status Evaluasi (PASTIKAN ID INI ADA DI fragment_taekwondo_detail.xml)
+        // Komponen UI untuk Status Evaluasi
         val cardStatus = view.findViewById<MaterialCardView>(R.id.cardStatus)
         val tvStatusText = view.findViewById<TextView>(R.id.tvStatusText)
 
@@ -162,9 +158,57 @@ class TaekwondoDetailFragment : Fragment() {
                 Toast.makeText(requireContext(), "Error: ID Gerakan tidak ditemukan!", Toast.LENGTH_SHORT).show()
             }
         }
+
+        // ==========================================
+        // 10. FITUR FAVORIT (DIPINDAHKAN KE SINI)
+        // ==========================================
+
+        fun updateFavoriteIcon(status: Boolean) {
+            if (status) {
+                ivFavorite.setImageResource(android.R.drawable.btn_star_big_on)
+                ivFavorite.setColorFilter(Color.parseColor("#FF5252"))
+            } else {
+                ivFavorite.setImageResource(android.R.drawable.btn_star_big_off)
+                ivFavorite.setColorFilter(Color.parseColor("#FFFFFF"))
+            }
+        }
+
+        if (moveId.isNotBlank()) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                isFavorited = repository.cekIsFavorite(currentUserId, moveId)
+                updateFavoriteIcon(isFavorited)
+            }
+        }
+
+        ivFavorite.setOnClickListener {
+            if (moveId.isBlank()) return@setOnClickListener
+
+            it.animate().scaleX(1.2f).scaleY(1.2f).setDuration(100).withEndAction {
+                it.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
+            }.start()
+
+            isFavorited = !isFavorited
+            updateFavoriteIcon(isFavorited)
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                val sukses = if (isFavorited) {
+                    repository.tambahFavorite(currentUserId, moveId)
+                } else {
+                    repository.hapusFavorite(currentUserId, moveId)
+                }
+
+                if (!sukses) {
+                    isFavorited = !isFavorited
+                    updateFavoriteIcon(isFavorited)
+                    Toast.makeText(requireContext(), "Gagal mengupdate favorit", Toast.LENGTH_SHORT).show()
+                } else {
+                    val pesan = if (isFavorited) "Ditambahkan ke Favorit" else "Dihapus dari Favorit"
+                    Toast.makeText(requireContext(), pesan, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
-    // Fungsi untuk memunculkan Bottom Sheet Dialog & Simpan Evaluasi ke Supabase
     private fun tampilkanDialogEvaluasi(
         moveId: String,
         namaGerakan: String,
@@ -172,7 +216,6 @@ class TaekwondoDetailFragment : Fragment() {
         tvStatusText: TextView
     ) {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
-        // Berikan parent view agar layout params terhitung dengan benar
         val dialogView = layoutInflater.inflate(R.layout.dialog_evaluasi, null)
         bottomSheetDialog.setContentView(dialogView)
 
@@ -180,7 +223,6 @@ class TaekwondoDetailFragment : Fragment() {
         val btnLumayan = dialogView.findViewById<MaterialButton>(R.id.btnEvalLumayan)
         val btnMantap = dialogView.findViewById<MaterialButton>(R.id.btnEvalMantap)
 
-        // Helper lokal untuk simpan data dan update UI sekaligus
         fun simpanDanUpdate(note: String, pesanToast: String) {
             Toast.makeText(requireContext(), pesanToast, Toast.LENGTH_SHORT).show()
             viewLifecycleOwner.lifecycleScope.launch {
@@ -205,24 +247,23 @@ class TaekwondoDetailFragment : Fragment() {
         bottomSheetDialog.show()
     }
 
-    // Fungsi untuk ganti warna Card Status sesuai hasil evaluasi dari DB
     private fun updateUIRefleksi(note: String, cardStatus: MaterialCardView, tvStatusText: TextView) {
         cardStatus.visibility = View.VISIBLE
         tvStatusText.text = "Status: $note"
 
         when (note) {
             "Masih Kaku" -> {
-                cardStatus.setCardBackgroundColor("#33FF5252".toColorInt()) // Merah transparan
+                cardStatus.setCardBackgroundColor("#33FF5252".toColorInt())
                 cardStatus.strokeColor = "#FF5252".toColorInt()
                 tvStatusText.setTextColor("#FF5252".toColorInt())
             }
             "Lumayan" -> {
-                cardStatus.setCardBackgroundColor("#33FF9800".toColorInt()) // Orange transparan
+                cardStatus.setCardBackgroundColor("#33FF9800".toColorInt())
                 cardStatus.strokeColor = "#FF9800".toColorInt()
                 tvStatusText.setTextColor("#FF9800".toColorInt())
             }
             "GG Banget" -> {
-                cardStatus.setCardBackgroundColor("#33FFD700".toColorInt()) // Kuning emas transparan
+                cardStatus.setCardBackgroundColor("#33FFD700".toColorInt())
                 cardStatus.strokeColor = "#FFD700".toColorInt()
                 tvStatusText.setTextColor("#FFD700".toColorInt())
             }

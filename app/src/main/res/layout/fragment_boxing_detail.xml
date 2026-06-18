@@ -91,6 +91,16 @@
                         android:textColor="#FFFFFF"
                         android:layout_centerVertical="true"/>
 
+                    <ImageView
+                        android:id="@+id/ivFavorite"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_toStartOf="@+id/cardLevel"
+                        android:layout_marginEnd="16dp"
+                        android:layout_centerVertical="true"
+                        android:src="@android:drawable/btn_star_big_off"
+                        app:tint="#FF5252" />
+
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardLevel"
                         android:layout_width="wrap_content"

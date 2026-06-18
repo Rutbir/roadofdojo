@@ -49,8 +49,8 @@ class BerandaActivity : AppCompatActivity() {
         // 3. JURUS AMAN SEMENTARA: Card Gerakan Favorit (Pakai Toast)
         val cardGerakanFavorit = findViewById<MaterialCardView>(R.id.cardGerakanFavorit)
         cardGerakanFavorit.setOnClickListener {
-            // Munculin pop-up kecil, besok lu tinggal ganti kode di dalem sini pake Intent
-            Toast.makeText(this, "THIS FEATURE IS ON PROGRESS!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, FavoriteListActivity::class.java)
+            startActivity(intent)
         }
 
         // 4. GRID MENU: Semua Teknik → BelaDiriActivity

@@ -142,4 +142,128 @@ class MovesRepository {
             e.printStackTrace()
         }
     }
+
+    suspend fun cekIsFavorite(userId: String, moveId: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val url = URL("${BuildConfig.SUPABASE_URL}/rest/v1/favorites?user_id=eq.$userId&move_id=eq.$moveId&select=id")
+            val connection = (url.openConnection() as HttpURLConnection).apply {
+                requestMethod = "GET"
+                setRequestProperty("apikey", BuildConfig.SUPABASE_ANON_KEY)
+                setRequestProperty("Authorization", "Bearer ${BuildConfig.SUPABASE_ANON_KEY}")
+                setRequestProperty("Accept", "application/json")
+                connectTimeout = 15_000
+                readTimeout = 15_000
+            }
+
+            if (connection.responseCode in 200..299) {
+                val responseBody = connection.inputStream.bufferedReader().use { it.readText() }
+                val jsonArray = org.json.JSONArray(responseBody)
+                return@withContext jsonArray.length() > 0 // Kalau datanya > 0, berarti udah di-favorit
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        false
+    }
+
+    // 2. Tambah ke Favorit (Insert)
+    suspend fun tambahFavorite(userId: String, moveId: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val url = URL("${BuildConfig.SUPABASE_URL}/rest/v1/favorites")
+            val connection = (url.openConnection() as HttpURLConnection).apply {
+                requestMethod = "POST"
+                setRequestProperty("apikey", BuildConfig.SUPABASE_ANON_KEY)
+                setRequestProperty("Authorization", "Bearer ${BuildConfig.SUPABASE_ANON_KEY}")
+                setRequestProperty("Content-Type", "application/json")
+                doOutput = true
+            }
+
+            val jsonBody = org.json.JSONObject().apply {
+                put("user_id", userId)
+                put("move_id", moveId)
+            }
+
+            connection.outputStream.write(jsonBody.toString().toByteArray(Charsets.UTF_8))
+            connection.outputStream.flush()
+            connection.outputStream.close()
+
+            return@withContext connection.responseCode in 200..299
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return@withContext false
+        }
+    }
+
+    // 3. Hapus dari Favorit (Delete)
+    suspend fun hapusFavorite(userId: String, moveId: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            // Delete berdasarkan kombinasi user_id dan move_id
+            val url = URL("${BuildConfig.SUPABASE_URL}/rest/v1/favorites?user_id=eq.$userId&move_id=eq.$moveId")
+            val connection = (url.openConnection() as HttpURLConnection).apply {
+                requestMethod = "DELETE"
+                setRequestProperty("apikey", BuildConfig.SUPABASE_ANON_KEY)
+                setRequestProperty("Authorization", "Bearer ${BuildConfig.SUPABASE_ANON_KEY}")
+            }
+            return@withContext connection.responseCode in 200..299
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return@withContext false
+        }
+    }
+    // 4. Ambil Daftar Gerakan Favorit User
+    suspend fun getFavoriteMovesUser(userId: String): List<Move> = withContext(Dispatchers.IO) {
+        val moveIds = mutableListOf<String>()
+
+        // Step 1: Ambil move_id apa saja yang di-favoritkan user ini
+        try {
+            val url = URL("${BuildConfig.SUPABASE_URL}/rest/v1/favorites?user_id=eq.$userId&select=move_id")
+            val connection = (url.openConnection() as HttpURLConnection).apply {
+                requestMethod = "GET"
+                setRequestProperty("apikey", BuildConfig.SUPABASE_ANON_KEY)
+                setRequestProperty("Authorization", "Bearer ${BuildConfig.SUPABASE_ANON_KEY}")
+                setRequestProperty("Accept", "application/json")
+                connectTimeout = 15_000
+                readTimeout = 15_000
+            }
+
+            if (connection.responseCode in 200..299) {
+                val responseBody = connection.inputStream.bufferedReader().use { it.readText() }
+                val jsonArray = org.json.JSONArray(responseBody)
+                for (i in 0 until jsonArray.length()) {
+                    moveIds.add(jsonArray.getJSONObject(i).getString("move_id"))
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return@withContext emptyList()
+        }
+
+        // Kalau belum punya favorit satupun, langsung return list kosong
+        if (moveIds.isEmpty()) return@withContext emptyList()
+
+        // Step 2: Ambil detail gerakan dari tabel moves berdasarkan move_id yang didapat
+        try {
+            // Ubah list ["id1", "id2"] jadi string "id1,id2" biar bisa masuk ke parameter URL Supabase "in.()"
+            val idsStr = moveIds.joinToString(",")
+            val urlMoves = URL("${BuildConfig.SUPABASE_URL}/rest/v1/moves?move_id=in.($idsStr)&select=move_id,category_id,move_name,title,description,level,youtube_url,image_url")
+            val connMoves = (urlMoves.openConnection() as HttpURLConnection).apply {
+                requestMethod = "GET"
+                setRequestProperty("apikey", BuildConfig.SUPABASE_ANON_KEY)
+                setRequestProperty("Authorization", "Bearer ${BuildConfig.SUPABASE_ANON_KEY}")
+                setRequestProperty("Accept", "application/json")
+                connectTimeout = 15_000
+                readTimeout = 15_000
+            }
+
+            if (connMoves.responseCode in 200..299) {
+                val responseBody = connMoves.inputStream.bufferedReader().use { it.readText() }
+                // Pakai parser yang udah ada buat mapping json ke List<Move>
+                return@withContext MovesJsonParser.parse(responseBody)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return@withContext emptyList()
+    }
 }

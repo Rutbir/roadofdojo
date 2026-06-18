@@ -52,7 +52,13 @@ class TaekwondoListFragment : Fragment() {
                 populateSection(advancedContainer, grouped["ADVANCED"].orEmpty())
 
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Gagal memuat gerakan: ${e.message}", Toast.LENGTH_LONG).show()
+                if (e !is kotlinx.coroutines.CancellationException) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Gagal memuat: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
     }
