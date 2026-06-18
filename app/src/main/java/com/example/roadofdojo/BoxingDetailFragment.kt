@@ -234,6 +234,7 @@ class BoxingDetailFragment : Fragment() {
             Toast.makeText(requireContext(), pesanToast, Toast.LENGTH_SHORT).show()
             viewLifecycleOwner.lifecycleScope.launch {
                 repository.simpanRefleksi(currentUserId, moveId, note)
+                repository.updateStreak(currentUserId)
                 updateUIRefleksi(note, cardStatus, tvStatusText)
             }
             bottomSheetDialog.dismiss()

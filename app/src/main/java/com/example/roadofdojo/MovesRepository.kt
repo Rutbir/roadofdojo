@@ -266,4 +266,103 @@ class MovesRepository {
 
         return@withContext emptyList()
     }
+    suspend fun getStreakUser(userId: String): org.json.JSONObject? = withContext(Dispatchers.IO) {
+        try {
+            val url = URL("${BuildConfig.SUPABASE_URL}/rest/v1/streaks?user_id=eq.$userId&select=*")
+            val connection = (url.openConnection() as HttpURLConnection).apply {
+                requestMethod = "GET"
+                setRequestProperty("apikey", BuildConfig.SUPABASE_ANON_KEY)
+                setRequestProperty("Authorization", "Bearer ${BuildConfig.SUPABASE_ANON_KEY}")
+                setRequestProperty("Accept", "application/json")
+                connectTimeout = 15_000
+                readTimeout = 15_000
+            }
+
+            if (connection.responseCode in 200..299) {
+                val responseBody = connection.inputStream.bufferedReader().use { it.readText() }
+                val jsonArray = org.json.JSONArray(responseBody)
+                if (jsonArray.length() > 0) {
+                    return@withContext jsonArray.getJSONObject(0)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return@withContext null
+    }
+
+    // 2. Kalkulasi dan Update Streak setelah latihan selesai
+    suspend fun updateStreak(userId: String) = withContext(Dispatchers.IO) {
+        try {
+            val streakData = getStreakUser(userId)
+            val today = java.time.LocalDate.now(java.time.ZoneId.of("Asia/Jakarta"))
+
+            var currentStreak = 1
+            var longestStreak = 1
+            var isNew = true
+            var streaksId = java.util.UUID.randomUUID().toString()
+
+            // Jika user sudah punya record streak sebelumnya, lakukan kalkulasi tanggal
+            if (streakData != null) {
+                isNew = false
+                streaksId = streakData.optString("streaks_id", streaksId)
+                val lastDateStr = streakData.optString("last_activity_streak", "")
+                currentStreak = streakData.optInt("current_streak", 0)
+                longestStreak = streakData.optInt("longest_streak", 0)
+
+                if (lastDateStr.isNotEmpty()) {
+                    val lastDate = java.time.LocalDate.parse(lastDateStr)
+                    val daysBetween = java.time.temporal.ChronoUnit.DAYS.between(lastDate, today)
+
+                    when {
+                        daysBetween == 0L -> return@withContext // Hari ini sudah latihan, tidak perlu update
+                        daysBetween == 1L -> currentStreak += 1 // Latihan beruntun dari kemarin
+                        else -> currentStreak = 1 // Bolos, reset streak kembali ke 1
+                    }
+                }
+            }
+
+            // Update rekor longest streak jika terpecahkan
+            if (currentStreak > longestStreak) {
+                longestStreak = currentStreak
+            }
+
+            // Siapkan payload JSON
+            val jsonBody = org.json.JSONObject().apply {
+                if (isNew) put("streaks_id", streaksId) // Insert ID kalau baru
+                put("user_id", userId)
+                put("current_streak", currentStreak)
+                put("longest_streak", longestStreak)
+                put("last_activity_streak", today.toString()) // Format YYYY-MM-DD
+            }
+
+            // Atur URL dan Method (POST untuk baru, PATCH untuk update row lama)
+            val targetUrl = if (isNew) {
+                URL("${BuildConfig.SUPABASE_URL}/rest/v1/streaks")
+            } else {
+                URL("${BuildConfig.SUPABASE_URL}/rest/v1/streaks?user_id=eq.$userId")
+            }
+            val targetMethod = if (isNew) "POST" else "PATCH"
+
+            val connection = (targetUrl.openConnection() as HttpURLConnection).apply {
+                requestMethod = targetMethod
+                setRequestProperty("apikey", BuildConfig.SUPABASE_ANON_KEY)
+                setRequestProperty("Authorization", "Bearer ${BuildConfig.SUPABASE_ANON_KEY}")
+                setRequestProperty("Content-Type", "application/json")
+                doOutput = true
+            }
+
+            connection.outputStream.write(jsonBody.toString().toByteArray(Charsets.UTF_8))
+            connection.outputStream.flush()
+            connection.outputStream.close()
+
+            val code = connection.responseCode
+            if (code !in 200..299) {
+                val errorBody = connection.errorStream?.bufferedReader()?.use { it.readText() }
+                println("ERROR UPDATE STREAK: $code - $errorBody")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }
