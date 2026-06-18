@@ -40,7 +40,7 @@ class QuickTipsListFragment : Fragment() {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
         val adapter = QuickTipsAdapter { tip ->
-            navigateToDetail(tip.title, tip.content, tip.video)
+            navigateToDetail(tip.title, tip.description, tip.video)
         }
         recyclerView.adapter = adapter
 
