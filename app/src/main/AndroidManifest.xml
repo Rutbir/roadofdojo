@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RoadOfDojo">
         <activity
-            android:name="roadofdojo.FavoriteListActivity"
+            android:name=".FavoriteListActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
