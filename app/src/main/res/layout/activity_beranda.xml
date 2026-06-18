@@ -2,7 +2,6 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_dojo_dark_premium">
@@ -39,12 +38,14 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_alignParentStart="true"
+                        android:layout_toStartOf="@id/imgProfile"
+                        android:layout_marginEnd="16dp"
                         android:layout_centerInParent="true">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Selamat Bertanding,"
+                            android:text="@string/beranda_welcome_text"
                             android:textColor="#888888"
                             android:textSize="14sp" />
 
@@ -52,7 +53,7 @@
                             android:id="@+id/txtUsername"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Fighter!"
+                            android:text="@string/beranda_default_username"
                             android:textColor="#FFD700"
                             android:textSize="22sp"
                             android:textStyle="bold" />
@@ -66,6 +67,7 @@
                         android:layout_centerInParent="true"
                         android:src="@drawable/taekwondo"
                         android:scaleType="centerCrop"
+                        android:contentDescription="@string/desc_profile_image"
                         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
                         app:strokeColor="#FFD700"
                         app:strokeWidth="1.5dp"/>
@@ -92,18 +94,23 @@
                             android:layout_marginBottom="14dp">
 
                             <TextView
+                                android:id="@+id/txtStreakTitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Streak Latihan Anda"
+                                android:layout_alignParentStart="true"
+                                android:layout_toStartOf="@+id/txtStreakCount"
+                                android:layout_marginEnd="8dp"
+                                android:text="@string/beranda_streak_title"
                                 android:textColor="#FFFFFF"
                                 android:textStyle="bold"
                                 android:textSize="16sp"/>
 
                             <TextView
+                                android:id="@+id/txtStreakCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
-                                android:text="🔥 5 Hari Beruntun!"
+                                android:text="@string/beranda_streak_count"
                                 android:textColor="#FFD700"
                                 android:textStyle="bold"
                                 android:textSize="15sp"/>
@@ -118,37 +125,37 @@
                             <com.google.android.material.card.MaterialCardView
                                 android:layout_width="32dp" android:layout_height="32dp" android:layout_margin="3dp"
                                 app:cardCornerRadius="16dp" app:cardBackgroundColor="#FFD700" app:strokeWidth="0dp">
-                                <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="S" android:textColor="#121212" android:textStyle="bold" android:gravity="center" android:textSize="12sp"/>
+                                <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="@string/day_monday_short" android:textColor="#121212" android:textStyle="bold" android:gravity="center" android:textSize="12sp"/>
                             </com.google.android.material.card.MaterialCardView>
                             <com.google.android.material.card.MaterialCardView
                                 android:layout_width="32dp" android:layout_height="32dp" android:layout_margin="3dp"
                                 app:cardCornerRadius="16dp" app:cardBackgroundColor="#FFD700" app:strokeWidth="0dp">
-                                <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="S" android:textColor="#121212" android:textStyle="bold" android:gravity="center" android:textSize="12sp"/>
+                                <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="@string/day_tuesday_short" android:textColor="#121212" android:textStyle="bold" android:gravity="center" android:textSize="12sp"/>
                             </com.google.android.material.card.MaterialCardView>
                             <com.google.android.material.card.MaterialCardView
                                 android:layout_width="32dp" android:layout_height="32dp" android:layout_margin="3dp"
                                 app:cardCornerRadius="16dp" app:cardBackgroundColor="#FFD700" app:strokeWidth="0dp">
-                                <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="R" android:textColor="#121212" android:textStyle="bold" android:gravity="center" android:textSize="12sp"/>
+                                <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="@string/day_wednesday_short" android:textColor="#121212" android:textStyle="bold" android:gravity="center" android:textSize="12sp"/>
                             </com.google.android.material.card.MaterialCardView>
                             <com.google.android.material.card.MaterialCardView
                                 android:layout_width="32dp" android:layout_height="32dp" android:layout_margin="3dp"
                                 app:cardCornerRadius="16dp" app:cardBackgroundColor="#FFD700" app:strokeWidth="0dp">
-                                <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="K" android:textColor="#121212" android:textStyle="bold" android:gravity="center" android:textSize="12sp"/>
+                                <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="@string/day_thursday_short" android:textColor="#121212" android:textStyle="bold" android:gravity="center" android:textSize="12sp"/>
                             </com.google.android.material.card.MaterialCardView>
                             <com.google.android.material.card.MaterialCardView
                                 android:layout_width="32dp" android:layout_height="32dp" android:layout_margin="3dp"
                                 app:cardCornerRadius="16dp" app:cardBackgroundColor="#FFD700" app:strokeWidth="0dp">
-                                <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="J" android:textColor="#121212" android:textStyle="bold" android:gravity="center" android:textSize="12sp"/>
+                                <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="@string/day_friday_short" android:textColor="#121212" android:textStyle="bold" android:gravity="center" android:textSize="12sp"/>
                             </com.google.android.material.card.MaterialCardView>
                             <com.google.android.material.card.MaterialCardView
                                 android:layout_width="32dp" android:layout_height="32dp" android:layout_margin="3dp"
                                 app:cardCornerRadius="16dp" app:cardBackgroundColor="#33FFFFFF" app:strokeWidth="0dp">
-                                <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="S" android:textColor="#888888" android:gravity="center" android:textSize="12sp"/>
+                                <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="@string/day_saturday_short" android:textColor="#888888" android:gravity="center" android:textSize="12sp"/>
                             </com.google.android.material.card.MaterialCardView>
                             <com.google.android.material.card.MaterialCardView
                                 android:layout_width="32dp" android:layout_height="32dp" android:layout_margin="3dp"
                                 app:cardCornerRadius="16dp" app:cardBackgroundColor="#33FFFFFF" app:strokeWidth="0dp">
-                                <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="M" android:textColor="#888888" android:gravity="center" android:textSize="12sp"/>
+                                <TextView android:layout_width="match_parent" android:layout_height="match_parent" android:text="@string/day_sunday_short" android:textColor="#888888" android:gravity="center" android:textSize="12sp"/>
                             </com.google.android.material.card.MaterialCardView>
                         </LinearLayout>
                     </LinearLayout>
@@ -157,7 +164,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Lanjutkan Latihanmu"
+                    android:text="@string/beranda_continue_training"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -199,6 +206,7 @@
                                 android:layout_height="match_parent"
                                 android:scaleType="centerCrop"
                                 android:src="@drawable/taekwondo"
+                                android:contentDescription="@string/beranda_taekwondo"
                                 android:transitionName="animasi_gambar_bela_diri" />
 
                             <View
@@ -210,7 +218,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Taekwondo"
+                                android:text="@string/beranda_taekwondo"
                                 android:textColor="#FFFFFF"
                                 android:textStyle="bold"
                                 android:layout_margin="12dp"
@@ -240,6 +248,7 @@
                                 android:layout_height="match_parent"
                                 android:scaleType="centerCrop"
                                 android:src="@drawable/boxing"
+                                android:contentDescription="@string/beranda_boxing"
                                 android:transitionName="animasi_gambar_bela_diri" />
 
                             <View
@@ -251,7 +260,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Boxing"
+                                android:text="@string/beranda_boxing"
                                 android:textColor="#FFFFFF"
                                 android:textStyle="bold"
                                 android:layout_margin="12dp"
@@ -278,14 +287,14 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="🔒"
+                                android:text="@string/beranda_locked_emoji"
                                 android:textSize="24sp"
                                 android:layout_marginBottom="8dp"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Gaya Lain\nSegera Hadir"
+                                android:text="@string/beranda_coming_soon"
                                 android:textAlignment="center"
                                 android:textColor="#888888"
                                 android:textSize="12sp"/>
@@ -305,7 +314,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Gerakan Favorit"
+                    android:text="@string/beranda_favorite_move"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -333,7 +342,7 @@
                             android:id="@+id/txtFavStar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🔥" android:textSize="26sp"
+                            android:text="@string/beranda_fire_emoji" android:textSize="26sp"
                             android:layout_centerVertical="true"
                             android:layout_alignParentStart="true"
                             android:layout_marginEnd="14dp"/>
@@ -343,12 +352,14 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:layout_toEndOf="@id/txtFavStar"
+                            android:layout_toStartOf="@+id/txtLatihAction"
+                            android:layout_marginEnd="8dp"
                             android:layout_centerVertical="true">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Dollyo Chagi"
+                                android:text="@string/beranda_fav_move_name"
                                 android:textColor="#FFFFFF"
                                 android:textStyle="bold"
                                 android:textSize="16sp"/>
@@ -356,18 +367,19 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Taekwondo • Roundhouse Kick"
+                                android:text="@string/beranda_fav_move_desc"
                                 android:textColor="#888888"
                                 android:textSize="12sp"
                                 android:layout_marginTop="2dp"/>
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/txtLatihAction"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:text="Latih ➔"
+                            android:text="@string/beranda_train_button"
                             android:textColor="#FFD700"
                             android:textStyle="bold"
                             android:textSize="14sp"/>
@@ -385,7 +397,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Eksplorasi"
+                    android:text="@string/beranda_explore"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -422,14 +434,14 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="🥋"
+                                android:text="@string/beranda_martial_arts_emoji"
                                 android:textSize="28sp"
                                 android:layout_marginBottom="4dp"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Semua Teknik"
+                                android:text="@string/beranda_all_techniques"
                                 android:textColor="#FFFFFF"
                                 android:textStyle="bold"
                                 android:textSize="14sp"/>
@@ -460,14 +472,14 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="💡"
+                                android:text="@string/beranda_tips_emoji"
                                 android:textSize="28sp"
                                 android:layout_marginBottom="4dp"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Quick Tips"
+                                android:text="@string/beranda_quick_tips"
                                 android:textColor="#FFFFFF"
                                 android:textStyle="bold"
                                 android:textSize="14sp"/>

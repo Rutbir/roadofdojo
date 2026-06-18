@@ -1,0 +1,331 @@
+package com.example.roadofdojo
+
+import android.annotation.SuppressLint
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.net.toUri
+import androidx.core.graphics.toColorInt
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.net.HttpURLConnection
+import java.net.URL
+
+class TaekwondoDetailFragment : Fragment() {
+
+    companion object {
+        const val ARG_MOVE_ID = "move_id" // PENTING: ID gerakan dari database
+        const val ARG_NAMA  = "nama_gerakan"
+        const val ARG_LEVEL = "level_gerakan"
+        const val ARG_DESC  = "desc_gerakan"
+        const val ARG_VIDEO = "video_url"
+        const val ARG_IMAGE = "image_url"
+    }
+
+    private var moveVideoWebView: WebView? = null
+
+    // Inisialisasi Repository buat manggil Supabase
+    private val repository = MovesRepository()
+
+    // TODO: Ganti ID ini pakai ID user yang asli dari session login Supabase lu
+    private val currentUserId = "11111111-2222-3333-4444-555555555555"
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_taekwondo_detail, container, false)
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // 1. Ambil data dari Bundle/Arguments
+        val moveId      = arguments?.getString(ARG_MOVE_ID) ?: ""
+        val namaGerakan = arguments?.getString(ARG_NAMA)  ?: "Dollyo Chagi"
+        val level       = arguments?.getString(ARG_LEVEL) ?: "BEGINNER"
+        val desc        = arguments?.getString(ARG_DESC)  ?: "Instruksi langkah demi langkah akan tampil di sini."
+        val videoUrl    = arguments?.getString(ARG_VIDEO).orEmpty()
+        val imageUrl    = arguments?.getString(ARG_IMAGE).orEmpty()
+
+        // 2. Set judul Toolbar
+        try {
+            (activity as? TaekwondoActivity)?.setToolbarTitle(namaGerakan)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        // 3. Hubungkan komponen UI utama
+        val tvTitle = view.findViewById<TextView>(R.id.tvGerakanTitle)
+        val tvLevel = view.findViewById<TextView>(R.id.tvLevel)
+        val tvDesc  = view.findViewById<TextView>(R.id.tvGerakanDesc)
+        val cardLevel = view.findViewById<MaterialCardView>(R.id.cardLevel)
+        val btnSelesai = view.findViewById<MaterialButton>(R.id.btnSelesaiLatihan)
+
+        // Komponen UI untuk Status Evaluasi (PASTIKAN ID INI ADA DI fragment_taekwondo_detail.xml)
+        val cardStatus = view.findViewById<MaterialCardView>(R.id.cardStatus)
+        val tvStatusText = view.findViewById<TextView>(R.id.tvStatusText)
+
+        // Komponen Video & Gambar
+        val imgDemo = view.findViewById<ImageView?>(R.id.imgGerakanDemo)
+        val overlay = view.findViewById<View?>(R.id.viewOverlay)
+        val playBtn = view.findViewById<ImageView?>(R.id.ivPlayOverlay)
+        val videoView = view.findViewById<WebView>(R.id.wvGerakanVideo)
+        moveVideoWebView = videoView
+
+        // 4. Set teks
+        tvTitle.text = namaGerakan
+        tvLevel.text = level.uppercase()
+        tvDesc.text  = desc
+
+        // 5. Cek status evaluasi dari Supabase saat layar dibuka
+        if (moveId.isNotBlank()) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                val refleksi = repository.getRefleksiUser(currentUserId, moveId)
+                if (refleksi != null) {
+                    updateUIRefleksi(refleksi.note, cardStatus, tvStatusText)
+                }
+            }
+        }
+
+        // 6. Set warna badge berdasarkan level
+        when (level.uppercase()) {
+            "BEGINNER" -> cardLevel.setCardBackgroundColor("#4CAF50".toColorInt())
+            "INTERMEDIATE" -> cardLevel.setCardBackgroundColor("#FF9800".toColorInt())
+            "ADVANCED" -> cardLevel.setCardBackgroundColor("#F44336".toColorInt())
+            else -> cardLevel.setCardBackgroundColor("#FFD700".toColorInt())
+        }
+
+        // 7. Muat gambar demo kalau ada imageUrl
+        if (imageUrl.isNotBlank() && imgDemo != null) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                loadImageInto(imgDemo, imageUrl)
+            }
+        }
+
+        // 8. Logika pemutar video
+        val playVideoAction = View.OnClickListener {
+            if (videoUrl.isNotBlank()) {
+                overlay?.visibility = View.GONE
+                playBtn?.visibility = View.GONE
+                imgDemo?.visibility = View.GONE
+                videoView?.visibility = View.VISIBLE
+
+                videoView?.settings?.apply {
+                    javaScriptEnabled = true
+                    domStorageEnabled = true
+                    loadsImagesAutomatically = true
+                }
+                videoView?.webViewClient = WebViewClient()
+                videoView?.loadDataWithBaseURL(
+                    "https://www.youtube-nocookie.com",
+                    buildYoutubeEmbedHtml(videoUrl),
+                    "text/html",
+                    "utf-8",
+                    null
+                )
+            } else {
+                Toast.makeText(requireContext(), "Memuat video tutorial $namaGerakan...", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        imgDemo?.setOnClickListener(playVideoAction)
+        overlay?.setOnClickListener(playVideoAction)
+        playBtn?.setOnClickListener(playVideoAction)
+
+        // 9. Action Button Selesai -> Memicu Pop-Up Evaluasi
+        btnSelesai.setOnClickListener {
+            if (moveId.isNotBlank()) {
+                tampilkanDialogEvaluasi(moveId, namaGerakan, cardStatus, tvStatusText)
+            } else {
+                Toast.makeText(requireContext(), "Error: ID Gerakan tidak ditemukan!", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    // Fungsi untuk memunculkan Bottom Sheet Dialog & Simpan Evaluasi ke Supabase
+    private fun tampilkanDialogEvaluasi(
+        moveId: String,
+        namaGerakan: String,
+        cardStatus: MaterialCardView,
+        tvStatusText: TextView
+    ) {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        // Berikan parent view agar layout params terhitung dengan benar
+        val dialogView = layoutInflater.inflate(R.layout.dialog_evaluasi, null)
+        bottomSheetDialog.setContentView(dialogView)
+
+        val btnKurang = dialogView.findViewById<MaterialButton>(R.id.btnEvalKurang)
+        val btnLumayan = dialogView.findViewById<MaterialButton>(R.id.btnEvalLumayan)
+        val btnMantap = dialogView.findViewById<MaterialButton>(R.id.btnEvalMantap)
+
+        // Helper lokal untuk simpan data dan update UI sekaligus
+        fun simpanDanUpdate(note: String, pesanToast: String) {
+            Toast.makeText(requireContext(), pesanToast, Toast.LENGTH_SHORT).show()
+            viewLifecycleOwner.lifecycleScope.launch {
+                repository.simpanRefleksi(currentUserId, moveId, note)
+                updateUIRefleksi(note, cardStatus, tvStatusText)
+            }
+            bottomSheetDialog.dismiss()
+        }
+
+        btnKurang.setOnClickListener {
+            simpanDanUpdate("Masih Kaku", "Tetap semangat! Latihan terus $namaGerakan.")
+        }
+
+        btnLumayan.setOnClickListener {
+            simpanDanUpdate("Lumayan", "Nice! Dikit lagi $namaGerakan lu sempurna.")
+        }
+
+        btnMantap.setOnClickListener {
+            simpanDanUpdate("GG Banget", "GG Banget! Lu udah nguasain $namaGerakan.")
+        }
+
+        bottomSheetDialog.show()
+    }
+
+    // Fungsi untuk ganti warna Card Status sesuai hasil evaluasi dari DB
+    private fun updateUIRefleksi(note: String, cardStatus: MaterialCardView, tvStatusText: TextView) {
+        cardStatus.visibility = View.VISIBLE
+        tvStatusText.text = "Status: $note"
+
+        when (note) {
+            "Masih Kaku" -> {
+                cardStatus.setCardBackgroundColor("#33FF5252".toColorInt()) // Merah transparan
+                cardStatus.strokeColor = "#FF5252".toColorInt()
+                tvStatusText.setTextColor("#FF5252".toColorInt())
+            }
+            "Lumayan" -> {
+                cardStatus.setCardBackgroundColor("#33FF9800".toColorInt()) // Orange transparan
+                cardStatus.strokeColor = "#FF9800".toColorInt()
+                tvStatusText.setTextColor("#FF9800".toColorInt())
+            }
+            "GG Banget" -> {
+                cardStatus.setCardBackgroundColor("#33FFD700".toColorInt()) // Kuning emas transparan
+                cardStatus.strokeColor = "#FFD700".toColorInt()
+                tvStatusText.setTextColor("#FFD700".toColorInt())
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        moveVideoWebView?.apply {
+            stopLoading()
+            loadUrl("about:blank")
+            destroy()
+        }
+        moveVideoWebView = null
+        super.onDestroyView()
+    }
+
+    private fun buildYoutubeEmbedHtml(videoUrl: String): String {
+        val embedUrl = extractYoutubeEmbedUrl(videoUrl)
+        return """
+            <html>
+              <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <style>
+                  html, body {
+                    margin: 0;
+                    padding: 0;
+                    background: #000000;
+                    width: 100%;
+                    height: 100%;
+                    overflow: hidden;
+                  }
+                  .wrap {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                  }
+                  iframe {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    border: 0;
+                  }
+                </style>
+              </head>
+              <body>
+                <div class="wrap">
+                  <iframe
+                    src="$embedUrl"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+                  </iframe>
+                </div>
+              </body>
+            </html>
+        """.trimIndent()
+    }
+
+    private fun extractYoutubeEmbedUrl(videoUrl: String): String {
+        val videoId = when {
+            videoUrl.contains("youtube.com/embed/") -> videoUrl.substringAfter("youtube.com/embed/")
+                .substringBefore('?')
+                .substringBefore('/')
+
+            videoUrl.contains("youtu.be/") -> videoUrl.substringAfter("youtu.be/")
+                .substringBefore('?')
+                .substringBefore('/')
+
+            videoUrl.contains("youtube.com/shorts/") -> videoUrl.substringAfter("youtube.com/shorts/")
+                .substringBefore('?')
+                .substringBefore('/')
+
+            videoUrl.contains("watch") -> {
+                val uri = videoUrl.toUri()
+                uri.getQueryParameter("v").orEmpty()
+            }
+
+            else -> ""
+        }
+
+        return if (videoId.isNotBlank()) {
+            "https://www.youtube-nocookie.com/embed/$videoId?playsinline=1&rel=0&modestbranding=1&origin=https://www.youtube-nocookie.com"
+        } else {
+            videoUrl
+        }
+    }
+
+    private suspend fun loadImageInto(imageView: ImageView, urlStr: String) {
+        try {
+            val bitmap = withContext(Dispatchers.IO) {
+                val url = URL(urlStr)
+                val conn = (url.openConnection() as HttpURLConnection).apply {
+                    connectTimeout = 10_000
+                    readTimeout = 10_000
+                    doInput = true
+                }
+                conn.connect()
+                val stream = conn.inputStream
+                val bmp = BitmapFactory.decodeStream(stream)
+                stream.close()
+                bmp
+            }
+            withContext(Dispatchers.Main) {
+                if (bitmap != null) imageView.setImageBitmap(bitmap)
+            }
+        } catch (_: Exception) {
+            // keep default image if error occurs
+        }
+    }
+}

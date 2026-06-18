@@ -8,15 +8,20 @@ import kotlinx.coroutines.withContext
 
 class QuickTipsRepository {
     suspend fun fetchTips(): List<QuickTip> = withContext(Dispatchers.IO) {
+        // PERHATIKAN BAGIAN INI: Kita ubah jadi select=* biar SEMUA kolom ketarik
         val url = URL(
             "${BuildConfig.SUPABASE_URL}/rest/v1/quick_tips" +
-                "?select=id,title,content,sort_order&order=sort_order.asc"
+                    "?select=*&order=sort_order.asc"
+            // Pastikan nama tabelnya bener 'quick_tips', sesuaikan kalo beda
         )
+
         val connection = (url.openConnection() as HttpURLConnection).apply {
             requestMethod = "GET"
             setRequestProperty("apikey", BuildConfig.SUPABASE_ANON_KEY)
             setRequestProperty("Authorization", "Bearer ${BuildConfig.SUPABASE_ANON_KEY}")
             setRequestProperty("Accept", "application/json")
+            connectTimeout = 15_000
+            readTimeout = 15_000
         }
 
         val responseCode = connection.responseCode

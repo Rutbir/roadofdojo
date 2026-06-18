@@ -3,6 +3,15 @@
   <component name="CopilotDiffPersistence">
     <option name="pendingDiffs">
       <map>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/example/roadofdojo/QuickTipsJsonParser.kt">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/app/src/main/java/com/example/roadofdojo/QuickTipsJsonParser.kt" />
+              <option name="originalContent" value="package com.example.roadofdojo&#10;&#10;import org.json.JSONArray&#10;&#10;object QuickTipsJsonParser {&#10;    fun parse(json: String): List&lt;QuickTip&gt; {&#10;        val array = JSONArray(json)&#10;        val tips = ArrayList&lt;QuickTip&gt;(array.length())&#10;        for (index in 0 until array.length()) {&#10;            val obj = array.getJSONObject(index)&#10;            tips.add(&#10;                QuickTip(&#10;                    id = obj.optString(&quot;id&quot;),&#10;                    title = obj.optString(&quot;title&quot;),&#10;                    content = obj.optString(&quot;content&quot;),&#10;                    sortOrder = obj.optInt(&quot;sort_order&quot;, index),&#10;                    video = obj.optString(&quot;video&quot;).takeIf { it.isNotBlank() }&#10;                )&#10;            )&#10;        }&#10;        return tips&#10;    }&#10;}&#10;&#10;" />
+              <option name="updatedContent" value="package com.example.roadofdojo&#10;&#10;import org.json.JSONArray&#10;&#10;object QuickTipsJsonParser {&#10;    fun parse(json: String): List&lt;QuickTip&gt; {&#10;        val array = JSONArray(json)&#10;        val tips = ArrayList&lt;QuickTip&gt;(array.length())&#10;        for (index in 0 until array.length()) {&#10;            val obj = array.getJSONObject(index)&#10;            // Handle JSON null explicitly for 'video' to avoid the literal string &quot;null&quot;&#10;            val videoValue = if (obj.isNull(&quot;video&quot;)) {&#10;                null&#10;            } else {&#10;                obj.optString(&quot;video&quot;).trim().takeIf { it.isNotEmpty() &amp;&amp; it.lowercase() != &quot;null&quot; }&#10;            }&#10;&#10;            tips.add(&#10;                QuickTip(&#10;                    id = obj.optString(&quot;id&quot;),&#10;                    title = obj.optString(&quot;title&quot;),&#10;                    content = obj.optString(&quot;content&quot;),&#10;                    sortOrder = obj.optInt(&quot;sort_order&quot;, index),&#10;                    video = videoValue&#10;                )&#10;            )&#10;        }&#10;        return tips&#10;    }&#10;}&#10;&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/app/src/main/res/layout/fragment_quick_tips_list.xml">
           <value>
             <PendingDiffInfo>

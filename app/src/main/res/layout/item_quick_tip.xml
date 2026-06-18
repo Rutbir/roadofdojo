@@ -4,81 +4,81 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="200dp"
     android:layout_margin="8dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardCornerRadius="20dp"
-    app:cardElevation="0dp"
-    app:cardBackgroundColor="#1E1E24"
-    app:strokeColor="#2EFFFFFF"
-    app:strokeWidth="1.5dp">
+    app:cardElevation="4dp"
+    app:strokeWidth="0dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/imgTipThumbnail"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/quick_tips" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000" />
+
+        <TextView
+            android:id="@+id/tvTipCategory"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
-
-            <ImageView
-                android:id="@+id/ivTipIcon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:drawable/ic_dialog_info"
-                app:tint="#FFD700" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/tvTipCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DEFENSE"
-                android:textColor="#FF4081"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.1"
-                android:background="@drawable/bg_badge_transparent"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:fontFamily="sans-serif-medium"/>
-        </LinearLayout>
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_badge_transparent"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:textColor="#FF4081"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.1"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="DEFENSE" />
 
         <TextView
             android:id="@+id/tvTipTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginBottom="4dp"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"
             android:fontFamily="sans-serif-medium"
-            android:lineSpacingExtra="2dp"
-            android:layout_marginBottom="8dp"
-            tools:text="Jangan langsung mencabut benda tajam" />
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintBottom_toTopOf="@+id/tvTipDescription"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Cara Membebaskan Diri dari Choke Hold" />
 
         <TextView
             android:id="@+id/tvTipDescription"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="#B0B0B5"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginBottom="12dp"
+            android:textColor="#CCCCCC"
             android:textSize="12sp"
             android:fontFamily="sans-serif"
-            android:maxLines="3"
+            android:maxLines="2"
             android:ellipsize="end"
-            android:lineSpacingExtra="3dp"
-            tools:text="Tujuan: Memahami fungsi benda tersebut sebagai penyumbat darurat." />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Tujuan: Melepaskan diri dari cekikan dan menghindari kehilangan napas." />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

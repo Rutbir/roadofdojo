@@ -1,31 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_wood_overlay">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvQuickTips"
+    android:background="@drawable/bg_wood_overlay"> <com.google.android.material.card.MaterialCardView
+    android:id="@+id/mainContainer"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_marginTop="24dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="32dp"
+    app:cardElevation="8dp"
+    app:strokeWidth="0dp"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginBottom="-32dp">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="12dp"
-        android:clipToPadding="false" />
+        android:orientation="vertical"
+        android:paddingTop="32dp"
+        android:paddingHorizontal="20dp">
 
-    <TextView
+        <TextView
+            android:id="@+id/tvBannerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dojo Quick Tips"
+            android:textColor="#1A1A1A"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.02" /> <TextView
+        android:id="@+id/tvBannerSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Trik jago dari para master"
+        android:textColor="#666666"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="24dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvQuickTips"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="52dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_quick_tip" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:id="@+id/llEmptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/mainContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/quick_tips"
+            android:layout_marginBottom="16dp"
+            app:tint="#E0E0E0" /> <TextView
         android:id="@+id/tvTipsEmpty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Tidak ada tips."
-        android:textSize="14sp"
-        android:textColor="#1A1A1A"
-        android:visibility="gone" />
+        android:text="Belum ada tips nih bro!"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#1A1A1A" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Coba cek lagi nanti ya."
+            android:textSize="14sp"
+            android:textColor="#888888"
+            android:layout_marginTop="4dp"/>
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressTips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:indeterminateTint="#FFD700"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
